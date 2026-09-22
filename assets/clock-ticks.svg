@@ -1,0 +1,21 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="220" height="220" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="time ticks 24h">
+<mask id="mask0_0_179" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="220" height="220">
+<path id="Subtract" d="M110 0C170.751 0 220 49.2487 220 110C220 170.751 170.751 220 110 220C49.2487 220 0 170.751 0 110C0 49.2487 49.2487 0 110 0ZM110 10C54.7715 10 10 54.7715 10 110C10 165.228 54.7715 210 110 210C165.228 210 210 165.228 210 110C210 54.7715 165.228 10 110 10Z" fill="#CCCCCC"/>
+</mask>
+<g mask="url(#mask0_0_179)">
+<rect id="Rectangle 1" x="109" y="-63" width="2" height="347" fill="#CCCCCC"/>
+<rect id="Rectangle 12" x="153.939" y="-57.347" width="2" height="347" transform="rotate(15 153.939 -57.347)" fill="#CCCCCC"/>
+<rect id="Rectangle 11" x="195.884" y="-40.2554" width="2" height="347" transform="rotate(30 195.884 -40.2554)" fill="#CCCCCC"/>
+<rect id="Rectangle 8" x="231.976" y="-11.8901" width="2" height="347" transform="rotate(45 231.976 -11.8901)" fill="#CCCCCC"/>
+<rect id="Rectangle 7" x="259.755" y="22.8839" width="2" height="347" transform="rotate(60 259.755 22.8839)" fill="#CCCCCC"/>
+<rect id="Rectangle 6" x="277.329" y="64.629" width="2" height="347" transform="rotate(75 277.329 64.629)" fill="#CCCCCC"/>
+<rect id="Rectangle 5" x="-63.5" y="111.5" width="2" height="347" transform="rotate(-90 -63.5 111.5)" fill="#CCCCCC"/>
+<rect id="Rectangle 10" x="-57.8469" y="66.5608" width="2" height="347" transform="rotate(-75 -57.8469 66.5608)" fill="#CCCCCC"/>
+<rect id="Rectangle 4" x="-40.7555" y="24.616" width="2" height="347" transform="rotate(-60 -40.7555 24.616)" fill="#CCCCCC"/>
+<rect id="Rectangle 3" x="-13.3901" y="-11.4759" width="2" height="347" transform="rotate(-45 -13.3901 -11.4759)" fill="#CCCCCC"/>
+<rect id="Rectangle 9" x="22.3839" y="-39.2554" width="2" height="347" transform="rotate(-30 22.3839 -39.2554)" fill="#CCCCCC"/>
+<rect id="Rectangle 2" x="64.1289" y="-56.8293" width="2" height="347" transform="rotate(-15 64.1289 -56.8293)" fill="#CCCCCC"/>
+</g>
+</g>
+</svg>
