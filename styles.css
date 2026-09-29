@@ -127,6 +127,108 @@ button { border: 0; cursor: pointer; }
 .pet-actions .sheet-pill { width: 121px; }
 .pet-actions .sheet-pill:disabled { opacity: 1; cursor: default; }
 
+/* Onboarding flow */
+.onboarding-layer { position: relative; width: 100%; height: 100%; z-index: 30; overflow: hidden; background: #fff; color: #292e36; font-family: Roboto, Arial, sans-serif; }
+.onboarding-layer.is-hidden { visibility: hidden; pointer-events: none; }
+.onboarding-screen { position: absolute; inset: 0; display: flex; flex-direction: column; background: #fff; opacity: 1; transform: translateX(0); }
+.onboarding-screen[hidden] { display: none; }
+.account-screen { padding: 89px 28px 0; align-items: center; }
+.account-brand { margin: 0 0 21px; color: #292e36; font-size: 56px; font-weight: 700; line-height: 1.05; letter-spacing: -1.8px; }
+.account-screen h1 { margin: 0 0 26px; color: #292e36; font-size: 34px; font-weight: 700; line-height: 1.15; letter-spacing: -.6px; }
+.account-form { width: 346px; }
+.onboard-field { display: flex; flex-direction: column; gap: 8px; width: 346px; margin: 0 0 17px; color: #292e36; font-size: 21px; font-weight: 500; line-height: 26px; }
+.onboard-field input, .onboard-field select { width: 346px; height: 56px; border: 2px solid #bcc2ca; border-radius: 12px; padding: 0 20px; color: #292e36; background: #fff; font: 400 22px/28px Roboto, Arial, sans-serif; outline: none; }
+.onboard-field input::placeholder { color: #292e36; opacity: 1; }
+.onboard-field input:focus, .onboard-field select:focus { border-color: #1d4975; box-shadow: 0 0 0 3px rgba(29,73,117,.14); }
+.onboard-primary, .onboard-secondary { width: 346px; height: 64px; border-radius: 14px; font: 500 23px/29px Roboto, Arial, sans-serif; cursor: pointer; }
+.onboard-primary { color: #fff; background: #1d4975; }
+.onboard-primary:active, .onboard-secondary:active { transform: translateY(1px); }
+.onboard-secondary { color: #1d4975; border: 2px solid #1d4975; background: #fff; }
+.form-error { width: 346px; min-height: 0; margin: -8px 0 10px; color: #9c2e36; font: 400 14px/18px Roboto, Arial, sans-serif; }
+.account-divider { width: 346px; height: 24px; margin: 16px 0 3px; }
+.account-divider img { display: block; width: 346px; height: 24px; }
+.terms-copy { margin: 40px 0 0; color: #747d88; font: 400 17px/21px Roboto, Arial, sans-serif; text-align: center; }
+
+.onboarding-topbar { position: relative; width: 100%; height: 72px; display: flex; align-items: center; justify-content: center; padding-top: 19px; color: #292e36; font: 400 22px/28px Roboto, Arial, sans-serif; }
+.back-button { position: absolute; left: 28px; top: 20px; width: 30px; height: 30px; padding: 0; background: transparent; }
+.back-button img { display: block; width: 30px; height: 30px; }
+.topbar-spacer { width: 30px; }
+.companion-screen, .personalise-screen { padding: 0 28px; }
+.companion-screen h1, .personalise-screen h1 { margin: 5px 0 11px; color: #292e36; font-size: 30px; font-weight: 700; line-height: 38px; text-align: center; letter-spacing: -.55px; }
+.onboarding-subtitle { margin: 0 0 38px; color: #292e36; font: 400 22px/28px Roboto, Arial, sans-serif; text-align: center; }
+.companion-options { display: flex; flex-direction: column; gap: 24px; width: 346px; }
+.companion-option { width: 346px; height: 110px; display: grid; grid-template-columns: 114px 1fr 56px; align-items: center; border: 2px solid #bcc2ca; border-radius: 12px; padding: 0 18px; color: #292e36; background: #fff; font: 400 27px/34px Roboto, Arial, sans-serif; text-align: left; cursor: pointer; }
+.companion-option.is-selected { border-color: #98b3d6; background: #edf3fb; }
+.companion-art { justify-self: center; max-width: 76px; max-height: 62px; }
+.dog-art { width: 74px; height: 58px; }
+.cat-art { width: 76px; height: 62px; }
+.other-mark { display: grid; width: 76px; height: 62px; place-items: center; color: #292e36; font: 400 63px/1 Roboto, Arial, sans-serif; }
+.radio-wrap { justify-self: end; width: 40px; height: 40px; }
+.radio-wrap img { display: block; width: 40px; height: 40px; }
+.radio-selected { display: none !important; }
+.companion-option.is-selected .radio-selected { display: block !important; }
+.companion-option.is-selected .radio-unselected { display: none; }
+.onboarding-bottom-button { margin-top: auto; margin-bottom: 80px; }
+
+.personalise-screen h1 { margin-top: 5px; margin-bottom: 25px; }
+.personalise-form { width: 346px; display: flex; flex-direction: column; align-items: center; }
+.personalise-form .onboard-field { margin-bottom: 18px; }
+.select-field { position: relative; }
+.select-field::after { display: none; }
+.select-chevron { position: absolute; right: 20px; bottom: 16px; width: 26px; height: 24px; pointer-events: none; }
+.select-field select { appearance: none; padding-right: 48px; }
+.photo-upload { width: 346px; height: 95px; display: flex; align-items: center; justify-content: center; gap: 20px; border: 2px dashed #7f99b6; border-radius: 12px; color: #292e36; font: 400 22px/28px Roboto, Arial, sans-serif; cursor: pointer; }
+.photo-upload img { width: 54px; height: 50px; }
+.photo-upload input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.photo-upload.has-photo { border-style: solid; background: #edf3fb; }
+.photo-note { margin: 11px 0 0; color: #747d88; font: 400 16px/21px Roboto, Arial, sans-serif; }
+.personalise-form .form-error { margin: 6px 0 0; text-align: center; }
+.personalise-form .onboarding-bottom-button { margin-top: auto; margin-bottom: 80px; }
+
+.creating-screen { align-items: center; padding-top: 138px; }
+.creating-screen h1 { margin: 0; color: #292e36; font-size: 29px; font-weight: 700; line-height: 38px; }
+.loading-dots { width: 178px; height: 22px; margin-top: 60px; }
+.creating-dog { width: 220px; height: 244px; margin-top: 68px; }
+.creating-screen p { margin: 67px 0 0; color: #292e36; font: 400 27px/34px Roboto, Arial, sans-serif; text-align: center; }
+
+.meet-screen { align-items: center; padding-top: 66px; }
+.step-count { color: #292e36; font: 400 22px/28px Roboto, Arial, sans-serif; }
+.meet-screen h1 { margin: 32px 0 0; color: #292e36; font-size: 34px; font-weight: 700; line-height: 43px; }
+.meet-pet-wrap { position: relative; width: 346px; height: 352px; margin-top: 19px; }
+.meet-pet-art { position: absolute; left: 38px; top: 52px; width: 208px; height: 236px; background-image: url("./assets/onboarding/mocha-sitting.png"); background-repeat: no-repeat; background-size: auto 100%; background-position: center; }
+.meet-speech { position: absolute; right: 1px; top: 0; width: 130px; height: 116px; }
+.meet-speech-copy { position: absolute; right: 16px; top: 18px; width: 100px; margin: 0; color: #292e36; font: 400 21px/28px Roboto, Arial, sans-serif; }
+.meet-question { margin: 0 0 18px; color: #292e36; font: 400 27px/34px Roboto, Arial, sans-serif; }
+.meet-confirm { flex: 0 0 auto; }
+.meet-change { margin-top: 37px; color: #1d4975; background: transparent; font: 400 24px/30px Roboto, Arial, sans-serif; cursor: pointer; }
+
+.home-screen { overflow: hidden; color: #fff; background: #0a2f61 url("./assets/onboarding/raw/home-raw-01.png") center top / cover no-repeat; }
+.home-status-bar { position: absolute; inset: 20px 24px auto; display: flex; align-items: center; justify-content: space-between; color: #fff; font: 500 17px/22px Roboto, Arial, sans-serif; }
+.home-status-icons { display: flex; align-items: center; gap: 7px; }
+.home-signal { width: 18px; height: 12px; background: linear-gradient(90deg,#fff 18%,transparent 18% 28%,#fff 28% 48%,transparent 48% 58%,#fff 58% 78%,transparent 78% 88%,#fff 88%); border-radius: 2px; }
+.home-wifi { width: 16px; height: 11px; border: 2px solid #fff; border-top-color: transparent; border-left-color: transparent; border-radius: 0 0 14px 0; transform: rotate(45deg); }
+.home-battery { width: 24px; height: 12px; border: 1.5px solid #fff; border-radius: 3px; position: relative; }
+.home-battery::after { content: ""; position: absolute; right: -4px; top: 3px; width: 2px; height: 5px; border-radius: 0 2px 2px 0; background: #fff; }
+.home-greeting { position: absolute; left: 28px; top: 78px; margin: 0; color: #fff; font: 400 19px/24px Roboto, Arial, sans-serif; }
+.routine-pill { position: absolute; left: 21px; top: 111px; width: 318px; height: 45px; display: flex; align-items: center; gap: 10px; padding: 0 10px 0 4px; border-radius: 24px; color: #fff; background: rgba(4,43,91,.88); font: 400 15px/20px Roboto, Arial, sans-serif; text-align: left; }
+.routine-icon { width: 36px; height: 36px; border-radius: 50%; }
+.routine-arrows { width: 45px; height: 20px; margin-left: auto; overflow: hidden; }
+.routine-arrows img { display: block; width: 91px; height: 85px; max-width: none; transform: translate(-15px, -5px); }
+.home-message { position: absolute; left: 139px; top: 366px; width: 183px; height: 65px; display: flex; align-items: center; padding: 0 15px; border: 1px solid rgba(255,255,255,.35); border-radius: 19px; color: #fff; background: rgba(25,81,137,.68); font: 400 15px/19px Roboto, Arial, sans-serif; }
+.home-pet-art { position: absolute; left: 39px; top: 438px; width: 153px; height: 180px; background-image: url("./assets/onboarding/mocha-sitting.png"); background-repeat: no-repeat; background-size: auto 100%; background-position: center; }
+.home-pet-hint { position: absolute; left: 44px; top: 621px; margin: 0; color: #e2eff9; font: italic 13px/18px Roboto, Arial, sans-serif; }
+.home-primary, .home-secondary { position: absolute; left: 21px; width: 360px; height: 51px; border-radius: 26px; font: 400 18px/23px Roboto, Arial, sans-serif; cursor: pointer; }
+.home-primary { top: 660px; color: #082b5b; background: #d9eef7; }
+.home-secondary { top: 725px; border: 1px solid #d9eef7; color: #fff; background: rgba(4,43,91,.38); }
+.home-bottom-nav { position: absolute; left: 0; right: 0; bottom: 0; height: 66px; display: flex; align-items: center; justify-content: space-around; padding: 0 25px; background: rgba(0,30,77,.78); }
+.home-nav-button { width: 112px; height: 58px; display: grid; place-items: center; border-radius: 13px; background: transparent; cursor: pointer; }
+.home-nav-button.is-active { background: rgba(114,163,216,.35); }
+.home-nav-button img { width: 29px; height: 29px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .onboarding-screen, .onboard-primary, .onboard-secondary { transition: none !important; }
+}
+
 @media (max-width: 460px) {
   .demo-shell { padding: 0; display: block; }
   .demo-label { display: none; }

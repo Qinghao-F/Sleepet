@@ -22,6 +22,140 @@ const ARC_CIRCUMFERENCE = 2 * Math.PI * CLOCK_RADIUS;
 const $ = (id) => document.getElementById(id);
 const cycle = (current, length, dir) => (current + dir + length) % length;
 
+const onboardingState = {
+  screen: "account",
+  email: "",
+  password: "",
+  companion: "dog",
+  petName: "Mocha",
+  breed: "Border Collie",
+  colour: "Black & white",
+  photoUrl: ""
+};
+
+const onboardingScreens = [...document.querySelectorAll(".onboarding-screen")];
+const onboardingLayer = $("onboardingLayer");
+
+function showOnboardingScreen(name) {
+  onboardingState.screen = name;
+  // Browsers may scroll the clipped phone when an input receives focus.
+  // Reset it on every screen change so the 402 × 874 frame stays anchored.
+  $("phone").scrollTop = 0;
+  onboardingScreens.forEach((screen) => {
+    const active = screen.dataset.screen === name;
+    screen.hidden = !active;
+    screen.setAttribute("aria-hidden", String(!active));
+  });
+  onboardingLayer.classList.remove("is-hidden");
+  renderOnboarding();
+}
+
+function showPreferences() {
+  onboardingLayer.classList.add("is-hidden");
+  $("phone").scrollTop = 0;
+  $("scrollArea").scrollTop = 0;
+  renderMain();
+}
+
+function showHome() {
+  showOnboardingScreen("home");
+}
+
+function clearOnboardingError(id) {
+  $(id).textContent = "";
+}
+
+function renderOnboarding() {
+  const name = onboardingState.petName || "Mocha";
+  $("meetPetName").textContent = name;
+  $("meetSpeechName").textContent = name;
+  $("homePetName").textContent = name;
+  $("homeReadyName").textContent = name;
+  $("homeMeetName").textContent = name;
+  $("petNameInput").value = name;
+  $("petBreed").value = onboardingState.breed;
+  $("petColour").value = onboardingState.colour;
+  document.querySelectorAll(".companion-option").forEach((option) => {
+    const selected = option.dataset.companion === onboardingState.companion;
+    option.classList.toggle("is-selected", selected);
+    option.setAttribute("aria-checked", String(selected));
+  });
+}
+
+function validateAccount() {
+  const email = $("onboardEmail").value.trim();
+  const password = $("onboardPassword").value;
+  const error = $("accountError");
+  if (!email || !email.includes("@")) {
+    error.textContent = "Please enter a valid email address.";
+    $("onboardEmail").focus();
+    return false;
+  }
+  if (!password) {
+    error.textContent = "Please enter your password.";
+    $("onboardPassword").focus();
+    return false;
+  }
+  onboardingState.email = email;
+  onboardingState.password = password;
+  error.textContent = "";
+  return true;
+}
+
+function startCreatingSleepet() {
+  showOnboardingScreen("creating");
+  window.clearTimeout(startCreatingSleepet.timer);
+  startCreatingSleepet.timer = window.setTimeout(() => showOnboardingScreen("meet"), 1600);
+}
+
+$("accountForm").addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (validateAccount()) showOnboardingScreen("companion");
+});
+
+$("loginButton").addEventListener("click", () => {
+  if (validateAccount()) showHome();
+});
+
+document.querySelectorAll(".back-button").forEach((button) => button.addEventListener("click", () => showOnboardingScreen(button.dataset.back)));
+document.querySelectorAll(".companion-option").forEach((option) => option.addEventListener("click", () => {
+  onboardingState.companion = option.dataset.companion;
+  clearOnboardingError("personaliseError");
+  renderOnboarding();
+}));
+$("companionContinue").addEventListener("click", () => showOnboardingScreen("personalise"));
+
+$("personaliseForm").addEventListener("submit", (event) => {
+  event.preventDefault();
+  const name = $("petNameInput").value.trim();
+  if (!name) {
+    $("personaliseError").textContent = "Please give your companion a name.";
+    $("petNameInput").focus();
+    return;
+  }
+  onboardingState.petName = name;
+  onboardingState.breed = $("petBreed").value;
+  onboardingState.colour = $("petColour").value;
+  clearOnboardingError("personaliseError");
+  startCreatingSleepet();
+});
+
+$("petPhoto").addEventListener("change", (event) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  onboardingState.photoUrl = URL.createObjectURL(file);
+  const upload = document.querySelector(".photo-upload");
+  const image = upload.querySelector("img");
+  image.src = onboardingState.photoUrl;
+  image.alt = "Selected companion photo";
+  image.style.objectFit = "cover";
+  upload.classList.add("has-photo");
+});
+
+$("meetContinue").addEventListener("click", showHome);
+$("meetChange").addEventListener("click", () => showOnboardingScreen("personalise"));
+$("homeProfileButton").addEventListener("click", showPreferences);
+
 function scheduleToHours(hour, minute, period) {
   let value = Number(hour) % 12;
   if (period === "PM") value += 12;
@@ -191,4 +325,8 @@ $("poseNext").addEventListener("click", () => { state.poseIndex = cycle(state.po
 $("petLayer").querySelector(".scrim").addEventListener("click", () => closeLayer($("petLayer")));
 $("savePet").addEventListener("click", () => { $("mainPetAvatar").style.backgroundPosition = posePositions[state.poseIndex]; renderMain(); closeLayer($("petLayer")); });
 
+document.querySelector('.bottom-nav button[aria-label="Home"]').addEventListener("click", showHome);
+document.querySelector('.bottom-nav button[aria-label="Me"]').addEventListener("click", showPreferences);
+
+renderOnboarding();
 renderMain();

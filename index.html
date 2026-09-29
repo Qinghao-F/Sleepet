@@ -3,13 +3,87 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sleepet Preferences Demo</title>
+    <title>Sleepet Onboarding + Preferences Demo</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <main class="demo-shell">
       <p class="demo-label">Sleepet · Preferences interactive demo</p>
       <div class="phone" id="phone" aria-label="Sleepet preferences page">
+        <section class="onboarding-layer" id="onboardingLayer" aria-label="Sleepet onboarding">
+          <section class="onboarding-screen account-screen is-active" data-screen="account" aria-labelledby="accountTitle">
+            <div class="account-brand">Sleepet</div>
+            <h1 id="accountTitle">Welcome</h1>
+            <form class="account-form" id="accountForm" novalidate>
+              <label class="onboard-field"><span>Email</span><input id="onboardEmail" type="email" autocomplete="email" placeholder="you@example.com" /></label>
+              <label class="onboard-field"><span>Password</span><input id="onboardPassword" type="password" autocomplete="new-password" placeholder="••••••••" /></label>
+              <p class="form-error" id="accountError" role="alert"></p>
+              <button class="onboard-primary" id="createAccountButton" type="submit">Create account</button>
+            </form>
+            <div class="account-divider"><img src="./assets/onboarding/svg/account-divider.svg" alt="" /></div>
+            <button class="onboard-secondary" id="loginButton" type="button">Log in</button>
+            <p class="terms-copy">By continuing, you agree to our<br />Terms and Privacy Policy.</p>
+          </section>
+
+          <section class="onboarding-screen companion-screen" data-screen="companion" aria-labelledby="companionTitle" hidden>
+            <div class="onboarding-topbar"><button class="back-button" data-back="account" type="button" aria-label="Back to account"><img src="./assets/onboarding/svg/back-step.svg" alt="" /></button><span>1 of 3</span><span class="topbar-spacer"></span></div>
+            <h1 id="companionTitle">Choose your companion</h1>
+            <p class="onboarding-subtitle">You can change this later.</p>
+            <div class="companion-options" role="radiogroup" aria-label="Companion type">
+              <button class="companion-option is-selected" data-companion="dog" role="radio" aria-checked="true" type="button"><img class="companion-art dog-art" src="./assets/onboarding/svg/dog-icon.svg" alt="" /><span>Dog</span><span class="radio-wrap"><img class="radio-unselected" src="./assets/onboarding/svg/radio-unselected.svg" alt="" /><img class="radio-selected" src="./assets/onboarding/svg/radio-selected.svg" alt="" /></span></button>
+              <button class="companion-option" data-companion="cat" role="radio" aria-checked="false" type="button"><img class="companion-art cat-art" src="./assets/onboarding/svg/cat-icon.svg" alt="" /><span>Cat</span><span class="radio-wrap"><img class="radio-unselected" src="./assets/onboarding/svg/radio-unselected.svg" alt="" /><img class="radio-selected" src="./assets/onboarding/svg/radio-selected.svg" alt="" /></span></button>
+              <button class="companion-option" data-companion="other" role="radio" aria-checked="false" type="button"><span class="other-mark" aria-hidden="true">?</span><span>Other</span><span class="radio-wrap"><img class="radio-unselected" src="./assets/onboarding/svg/radio-unselected.svg" alt="" /><img class="radio-selected" src="./assets/onboarding/svg/radio-selected.svg" alt="" /></span></button>
+            </div>
+            <button class="onboard-primary onboarding-bottom-button" id="companionContinue" type="button">Continue</button>
+          </section>
+
+          <section class="onboarding-screen personalise-screen" data-screen="personalise" aria-labelledby="personaliseTitle" hidden>
+            <div class="onboarding-topbar"><button class="back-button" data-back="companion" type="button" aria-label="Back to companion choice"><img src="./assets/onboarding/svg/back-step.svg" alt="" /></button><span>2 of 3</span><span class="topbar-spacer"></span></div>
+            <h1 id="personaliseTitle">Personalise your pet</h1>
+            <form class="personalise-form" id="personaliseForm">
+              <label class="onboard-field"><span>Name</span><input id="petNameInput" type="text" value="Mocha" maxlength="20" /></label>
+              <label class="onboard-field select-field"><span>Breed</span><select id="petBreed"><option>Border Collie</option><option>Labrador</option><option>Golden Retriever</option><option>Mixed breed</option></select><img class="select-chevron" src="./assets/onboarding/svg/select-chevron.svg" alt="" /></label>
+              <label class="onboard-field select-field"><span>Colour</span><select id="petColour"><option>Black &amp; white</option><option>Brown</option><option>White</option><option>Grey</option></select><img class="select-chevron" src="./assets/onboarding/svg/select-chevron.svg" alt="" /></label>
+              <label class="photo-upload" for="petPhoto"><img src="./assets/onboarding/svg/camera.svg" alt="" /><span>Add a photo</span><input id="petPhoto" type="file" accept="image/*" /></label>
+              <p class="photo-note">Optional – create a pet inspired by your own.</p>
+              <p class="form-error" id="personaliseError" role="alert"></p>
+              <button class="onboard-primary onboarding-bottom-button" id="createSleepetButton" type="submit">Create my Sleepet</button>
+            </form>
+          </section>
+
+          <section class="onboarding-screen creating-screen" data-screen="creating" aria-labelledby="creatingTitle" hidden>
+            <h1 id="creatingTitle">Creating your Sleepet...</h1>
+            <img class="loading-dots" src="./assets/onboarding/svg/creating-dot.svg" alt="Creation in progress" />
+            <img class="creating-dog" src="./assets/onboarding/svg/creating-dog.svg" alt="" />
+            <p>A quiet companion<br />is on the way.</p>
+          </section>
+
+          <section class="onboarding-screen meet-screen" data-screen="meet" aria-labelledby="meetTitle" hidden>
+            <span class="step-count">3 of 3</span>
+            <h1 id="meetTitle">Meet <span id="meetPetName">Mocha</span></h1>
+            <div class="meet-pet-wrap"><div class="meet-pet-art" aria-label="Your new Sleepet"></div><img class="meet-speech" src="./assets/onboarding/svg/meet-speech.svg" alt="" /><p class="meet-speech-copy">Hi, I’m<br /><span id="meetSpeechName">Mocha</span>.</p></div>
+            <p class="meet-question">Keep this companion?</p>
+            <button class="onboard-primary meet-confirm" id="meetContinue" type="button">Yes, continue</button>
+            <button class="meet-change" id="meetChange" type="button">Change</button>
+          </section>
+
+          <section class="onboarding-screen home-screen" data-screen="home" aria-labelledby="homeGreeting" hidden>
+            <div class="home-status-bar"><span>9:41</span><span class="home-status-icons"><span class="home-signal"></span><span class="home-wifi"></span><span class="home-battery"></span></span></div>
+            <p class="home-greeting" id="homeGreeting">Good evening, Sally.</p>
+            <button class="routine-pill" id="routineButton" type="button"><img class="routine-icon" src="./assets/onboarding/raw/home-raw-04.png" alt="" /><span>Tomorrow’s morning routine</span><span class="routine-arrows" aria-hidden="true"><img src="./assets/onboarding/raw/home-raw-10.png" alt="" /></span></button>
+            <div class="home-message">Take it slow tonight,<br />I’m here.</div>
+            <div class="home-pet-art" id="homePetArt" aria-label="Mocha"></div>
+            <p class="home-pet-hint">Tap <span id="homePetName">Mocha</span> to interact</p>
+            <button class="home-primary" type="button">Ready to sleep with <span id="homeReadyName">Mocha</span></button>
+            <button class="home-secondary" type="button">Meet <span id="homeMeetName">Mocha</span> in AR</button>
+            <nav class="home-bottom-nav" aria-label="Home navigation">
+              <button class="home-nav-button is-active" type="button" aria-label="Home"><img src="./assets/nav-home.svg" alt="" /></button>
+              <button class="home-nav-button" type="button" aria-label="Sleep"><img src="./assets/nav-sleep.svg" alt="" /></button>
+              <button class="home-nav-button" id="homeProfileButton" type="button" aria-label="Me"><img src="./assets/nav-me.svg" alt="" /></button>
+            </nav>
+          </section>
+        </section>
+
         <header class="status-bar" aria-label="Status bar">
           <span>9:41</span>
           <span class="status-icons"><span class="signal"></span><span class="wifi">⌁</span><span class="battery"></span></span>

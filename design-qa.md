@@ -27,3 +27,14 @@
 - Sound, Preview, Privacy & data, Accessibility, and the other deferred menu contents remain outside this pass.
 
 **Result: passed**
+
+## Onboarding QA
+
+- Reference states: the six supplied Figma frames for Account, Companion, Personalise, Creating, Meet, and Home.
+- Implementation: the local browser prototype at `http://127.0.0.1:4173/`, using the downloaded Figma SVGs and supplied local imagery under `assets/onboarding/`.
+- Verified states: account form, companion radio selection, personalisation fields and photo-picker state, creating transition, Meet confirmation/change, Home, and Home → Me → Preferences.
+- Interaction checks: empty account validation, account-to-companion transition, 1.6-second creating transition, dynamic pet name across Meet/Home, direct Log in to Home, and navigation back to Preferences.
+- Visual checks: each state stays inside the 402 × 874 phone frame; the Home background and sitting companion are clipped cleanly; the existing clock and Preferences sheets remain available.
+- Scope note: this is a local demo without real authentication, persistence, or backend calls. Deferred Sound, Preview, Privacy & data, Accessibility, and other support destinations remain intentionally out of scope.
+
+final result: passed
