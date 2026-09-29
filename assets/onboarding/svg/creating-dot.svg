@@ -1,0 +1,13 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="178" height="22" viewBox="0 0 178 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Loading progress" clip-path="url(#clip0_0_16)">
+<circle id="Ellipse" cx="11" cy="11" r="11" fill="#1D4975"/>
+<circle id="Ellipse_2" cx="63" cy="11" r="11" fill="#CDD1D5"/>
+<circle id="Ellipse_3" cx="115" cy="11" r="11" fill="#CDD1D5"/>
+<circle id="Ellipse_4" cx="167" cy="11" r="11" fill="#CDD1D5"/>
+</g>
+<defs>
+<clipPath id="clip0_0_16">
+<rect width="178" height="22" fill="white"/>
+</clipPath>
+</defs>
+</svg>
