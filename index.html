@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sleepet Onboarding + Preferences Demo</title>
+    <title>Sleepet Interactive Demo</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <main class="demo-shell">
-      <p class="demo-label">Sleepet · Preferences interactive demo</p>
+      <p class="demo-label">Sleepet · interactive demo</p>
       <div class="phone" id="phone" aria-label="Sleepet preferences page">
         <section class="onboarding-layer" id="onboardingLayer" aria-label="Sleepet onboarding">
           <section class="onboarding-screen account-screen is-active" data-screen="account" aria-labelledby="accountTitle">
@@ -72,7 +72,13 @@
             <p class="home-greeting" id="homeGreeting">Good evening, Sally.</p>
             <button class="routine-pill" id="routineButton" type="button"><img class="routine-icon" src="./assets/onboarding/raw/home-raw-04.png" alt="" /><span>Tomorrow’s morning routine</span><span class="routine-arrows" aria-hidden="true"><img src="./assets/onboarding/raw/home-raw-10.png" alt="" /></span></button>
             <div class="home-message">Take it slow tonight,<br />I’m here.</div>
-            <div class="home-pet-art" id="homePetArt" aria-label="Mocha"></div>
+            <button class="home-pet-art" id="homePetArt" type="button" aria-label="Pet Mocha">
+              <img class="home-pet-body" src="./assets/onboarding/mocha-sitting.png" alt="" />
+              <span class="home-pet-head" aria-hidden="true">
+                <img class="home-pet-face" src="./assets/onboarding/mocha-sitting.png" alt="" />
+                <img class="home-pet-face home-pet-face-happy" src="./assets/onboarding/mocha-happy.png" alt="" />
+              </span>
+            </button>
             <p class="home-pet-hint">Tap <span id="homePetName">Mocha</span> to interact</p>
             <button class="home-primary" type="button">Ready to sleep with <span id="homeReadyName">Mocha</span></button>
             <button class="home-secondary" type="button">Meet <span id="homeMeetName">Mocha</span> in AR</button>
