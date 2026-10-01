@@ -246,7 +246,7 @@
               <h3>WIND-DOWN</h3>
               <div class="duration-inputs"><label><input id="windMinutes" inputmode="numeric" maxlength="2" value="20" /><span>Minutes</span></label><label><input id="windSeconds" inputmode="numeric" maxlength="2" value="00" /><span>Seconds</span></label></div>
             </div>
-            <div class="sheet-actions"><span class="clock-glyph" aria-hidden="true"><img src="./assets/clock/time-settings-enable.svg" alt="" /></span><button class="sheet-pill" id="cancelTime" type="button">Cancel</button><button class="sheet-pill" id="saveTime" type="button">Save</button></div>
+            <div class="sheet-actions"><button class="clock-glyph" id="timeClockToggle" type="button" aria-pressed="true" aria-label="Time adjustment enabled. Click to disable"><img id="timeClockToggleIcon" src="./assets/clock/time-settings-enable.svg" alt="" /></button><button class="sheet-pill" id="cancelTime" type="button">Cancel</button><button class="sheet-pill" id="saveTime" type="button">Save</button></div>
           </section>
         </div>
 
@@ -272,6 +272,6 @@
         </div>
       </div>
     </main>
-    <script src="./app.js"></script>
+    <script src="./app.js?v=clock-toggle"></script>
   </body>
 </html>

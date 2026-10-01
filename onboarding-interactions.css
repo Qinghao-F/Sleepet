@@ -232,3 +232,54 @@
 .onboarding-screen.home-screen[hidden] {
   display: none;
 }
+
+/* Creating: render one live, centered puppy over the Figma gradient. The
+ * exported reference contains a baked-in puppy, so it cannot remain visible
+ * alongside the opacity-animated SVG. */
+.onboarding-screen.creating-screen {
+  background: linear-gradient(
+    180deg,
+    rgb(0, 27, 74) 0%,
+    rgb(134, 196, 228) 27%,
+    rgb(67, 132, 193) 65.428%,
+    rgb(0, 26, 75) 100%
+  );
+}
+
+.onboarding-screen.creating-screen > .screen-reference {
+  display: none;
+}
+
+.onboarding-screen.creating-screen > h1,
+.onboarding-screen.creating-screen > p {
+  left: 0;
+  width: 100%;
+  opacity: 1;
+  z-index: 2;
+  text-align: center;
+}
+
+.onboarding-screen.creating-screen > h1 {
+  top: 138px;
+  margin: 0;
+}
+
+.onboarding-screen.creating-screen > .loading-dots {
+  display: none;
+}
+
+.onboarding-screen.creating-screen > .creating-dog {
+  top: 326px;
+  left: 50%;
+  width: 220px;
+  height: 244px;
+  margin: 0;
+  opacity: 1;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.onboarding-screen.creating-screen > p {
+  top: 637px;
+  margin: 0;
+}

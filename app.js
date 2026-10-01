@@ -6,6 +6,7 @@ const state = {
   petName: "Mocha",
   appearanceIndex: 0,
   poseIndex: 0,
+  timeClockEnabled: true,
   schedule: { bedHour: "08", bedMinute: "10", bedPeriod: "PM", wakeHour: "09", wakeMinute: "52", wakePeriod: "AM", windMinutes: "20", windSeconds: "00" }
 };
 
@@ -36,6 +37,7 @@ const onboardingState = {
 const onboardingScreens = [...document.querySelectorAll(".onboarding-screen")];
 const onboardingLayer = $("onboardingLayer");
 let splashTimer = null;
+let timeClockDraft = state.timeClockEnabled;
 
 function showOnboardingScreen(name) {
   window.clearTimeout(splashTimer);
@@ -255,6 +257,19 @@ function setScheduleInputs(schedule) {
   });
 }
 
+function renderTimeClockToggle(enabled) {
+  const button = $("timeClockToggle");
+  const icon = $("timeClockToggleIcon");
+  button.classList.toggle("is-disabled", !enabled);
+  button.setAttribute("aria-pressed", String(enabled));
+  button.setAttribute("aria-label", enabled
+    ? "Time adjustment enabled. Click to disable"
+    : "Time adjustment disabled. Click to enable");
+  icon.src = enabled
+    ? "./assets/clock/time-settings-enable.svg"
+    : "./assets/clock/time-settings-disable.svg";
+}
+
 function renderMain() {
   $("soundValue").textContent = sounds[state.soundIndex];
   $("modeValue").textContent = modes[state.modeIndex];
@@ -281,7 +296,12 @@ function readScheduleDraft() {
   return draft;
 }
 
-$("openTime").addEventListener("click", () => { setScheduleInputs(state.schedule); openLayer($("timeLayer")); });
+$("openTime").addEventListener("click", () => {
+  setScheduleInputs(state.schedule);
+  timeClockDraft = state.timeClockEnabled;
+  renderTimeClockToggle(timeClockDraft);
+  openLayer($("timeLayer"));
+});
 $("openPet").addEventListener("click", () => { renderPetDraft(); openLayer($("petLayer")); });
 
 document.querySelectorAll("[data-cycle]").forEach((button) => button.addEventListener("click", () => {
@@ -295,9 +315,26 @@ document.querySelectorAll("[data-ampm]").forEach((button) => button.addEventList
   document.querySelectorAll(`[data-ampm="${button.dataset.ampm}"]`).forEach((item) => item.classList.remove("selected"));
   button.classList.add("selected");
 }));
-$("cancelTime").addEventListener("click", () => closeLayer($("timeLayer")));
-$("timeLayer").querySelector(".scrim").addEventListener("click", () => closeLayer($("timeLayer")));
-$("saveTime").addEventListener("click", () => { state.schedule = readScheduleDraft(); renderMain(); closeLayer($("timeLayer")); });
+$("timeClockToggle").addEventListener("click", () => {
+  timeClockDraft = !timeClockDraft;
+  renderTimeClockToggle(timeClockDraft);
+});
+$("cancelTime").addEventListener("click", () => {
+  timeClockDraft = state.timeClockEnabled;
+  renderTimeClockToggle(state.timeClockEnabled);
+  closeLayer($("timeLayer"));
+});
+$("timeLayer").querySelector(".scrim").addEventListener("click", () => {
+  timeClockDraft = state.timeClockEnabled;
+  renderTimeClockToggle(state.timeClockEnabled);
+  closeLayer($("timeLayer"));
+});
+$("saveTime").addEventListener("click", () => {
+  state.schedule = readScheduleDraft();
+  state.timeClockEnabled = timeClockDraft;
+  renderMain();
+  closeLayer($("timeLayer"));
+});
 
 let activeDialHandle = null;
 document.querySelectorAll(".clock-handle").forEach((handle) => {
