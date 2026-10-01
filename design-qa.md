@@ -30,11 +30,12 @@
 
 ## Onboarding QA
 
-- Reference states: the six supplied Figma frames for Account, Companion, Personalise, Creating, Meet, and Home.
-- Implementation: the local browser prototype at `http://127.0.0.1:4173/`, using the downloaded Figma SVGs and supplied local imagery under `assets/onboarding/`.
-- Verified states: account form, companion radio selection, personalisation fields and photo-picker state, creating transition, Meet confirmation/change, Home, and Home → Me → Preferences.
+- Reference states: Figma nodes `264:808` (splash), `264:559` (Account), `264:523` (Choose), `264:501` (Personalise), `264:481` (Creating), and `264:471` (Meet).
+- Implementation: the local browser prototype at `http://127.0.0.1:4173/`, with the latest Figma exports stored under `assets/onboarding/latest/` and all UI text using `PingFang SC`.
+- Verified states: splash-to-account transition, account form, companion radio selection, personalisation fields and photo-picker state, creating transition with staggered loading dots, Meet confirmation/change, Home, and Home → Me → Preferences.
+- Motion checks: splash runs once for 4 seconds on one shared timeline; the supplied Symbol and seven letter SVGs use the Figma translate/scale/height tracks; the Account group enters from 681px during the final 22.5% of the timeline; creating dots and puppy pulse on an 800 ms loop; `prefers-reduced-motion` disables the loops and shortens the splash.
 - Interaction checks: empty account validation, account-to-companion transition, 1.6-second creating transition, dynamic pet name across Meet/Home, direct Log in to Home, and navigation back to Preferences.
-- Visual checks: each state stays inside the 402 × 874 phone frame; the Home background and sitting companion are clipped cleanly; the existing clock and Preferences sheets remain available.
+- Visual checks: each state stays inside the 402 × 874 phone frame; the latest Figma export is used as the visual layer while inputs/buttons remain live above it; the existing clock and Preferences sheets remain available.
 - Scope note: this is a local demo without real authentication, persistence, or backend calls. Deferred Sound, Preview, Privacy & data, Accessibility, and other support destinations remain intentionally out of scope.
 
 final result: passed

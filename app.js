@@ -23,7 +23,7 @@ const $ = (id) => document.getElementById(id);
 const cycle = (current, length, dir) => (current + dir + length) % length;
 
 const onboardingState = {
-  screen: "account",
+  screen: "splash",
   email: "",
   password: "",
   companion: "dog",
@@ -35,8 +35,10 @@ const onboardingState = {
 
 const onboardingScreens = [...document.querySelectorAll(".onboarding-screen")];
 const onboardingLayer = $("onboardingLayer");
+let splashTimer = null;
 
 function showOnboardingScreen(name) {
+  window.clearTimeout(splashTimer);
   onboardingState.screen = name;
   // Browsers may scroll the clipped phone when an input receives focus.
   // Reset it on every screen change so the 402 × 874 frame stays anchored.
@@ -48,6 +50,10 @@ function showOnboardingScreen(name) {
   });
   onboardingLayer.classList.remove("is-hidden");
   renderOnboarding();
+  if (name === "splash") {
+    const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    splashTimer = window.setTimeout(() => showOnboardingScreen("account"), reducedMotion ? 80 : 4000);
+  }
 }
 
 function showPreferences() {
@@ -328,5 +334,5 @@ $("savePet").addEventListener("click", () => { $("mainPetAvatar").style.backgrou
 document.querySelector('.bottom-nav button[aria-label="Home"]').addEventListener("click", showHome);
 document.querySelector('.bottom-nav button[aria-label="Me"]').addEventListener("click", showPreferences);
 
-renderOnboarding();
+showOnboardingScreen("splash");
 renderMain();

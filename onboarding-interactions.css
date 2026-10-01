@@ -1,0 +1,234 @@
+/*
+ * Live interaction layer for the Figma-exported onboarding screens.
+ * Keep this file after styles.css so the GitHub baseline stays untouched.
+ */
+
+/* The screenshot supplies the visual background; the real back control sits above it. */
+.onboarding-screen.companion-screen > .onboarding-topbar,
+.onboarding-screen.personalise-screen > .onboarding-topbar {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.onboarding-screen.companion-screen > .onboarding-topbar > span,
+.onboarding-screen.personalise-screen > .onboarding-topbar > span {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.onboarding-screen.companion-screen .back-button,
+.onboarding-screen.personalise-screen .back-button {
+  position: absolute;
+  left: 18px;
+  top: 50px;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  opacity: 1;
+  pointer-events: auto;
+  border-radius: 12px;
+  background: transparent;
+}
+
+.onboarding-screen.companion-screen .back-button img,
+.onboarding-screen.personalise-screen .back-button img {
+  width: 30px;
+  height: 30px;
+}
+
+.onboarding-screen.companion-screen .back-button:focus-visible,
+.onboarding-screen.personalise-screen .back-button:focus-visible {
+  outline: 3px solid rgba(217, 238, 247, .95);
+  outline-offset: 1px;
+}
+
+.onboarding-screen.companion-screen .back-button:active,
+.onboarding-screen.personalise-screen .back-button:active {
+  transform: translateY(1px);
+}
+
+/* Choose: the cards are live controls at the same coordinates as the Figma frame. */
+.onboarding-screen.companion-screen > .companion-options {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.onboarding-screen.companion-screen .companion-option {
+  position: absolute;
+  left: 28px;
+  width: 346px;
+  height: 110px;
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+.onboarding-screen.companion-screen .companion-option:nth-child(1) { top: 267px; }
+.onboarding-screen.companion-screen .companion-option:nth-child(2) { top: 401px; }
+.onboarding-screen.companion-screen .companion-option:nth-child(3) { top: 535px; }
+
+.onboarding-screen.companion-screen .companion-option:focus-visible {
+  outline: 3px solid rgba(29, 73, 117, .72);
+  outline-offset: 2px;
+}
+
+.onboarding-screen.companion-screen .companion-option:active {
+  transform: translateY(1px);
+}
+
+.onboarding-screen.companion-screen #companionContinue {
+  position: absolute;
+  left: 28px;
+  top: 713px;
+  width: 346px;
+  height: 64px;
+  z-index: 7;
+  opacity: 1;
+  pointer-events: auto;
+  margin: 0;
+  color: #082b5b;
+  background: #d9eef7;
+  box-shadow: 0 0 6px rgba(212, 231, 237, .72);
+}
+
+.onboarding-screen.companion-screen #companionContinue:focus-visible,
+.onboarding-screen.personalise-screen #createSleepetButton:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, .9);
+  outline-offset: 2px;
+}
+
+/* Personalise: keep each field live so changed values remain visible after blur. */
+.onboarding-screen.personalise-screen > .personalise-form {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.onboarding-screen.personalise-screen .personalise-form .onboard-field {
+  position: absolute;
+  left: 28px;
+  width: 346px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.onboarding-screen.personalise-screen .personalise-form .onboard-field:nth-child(1) { top: 196px; }
+.onboarding-screen.personalise-screen .personalise-form .onboard-field:nth-child(2) { top: 308px; }
+.onboarding-screen.personalise-screen .personalise-form .onboard-field:nth-child(3) { top: 420px; }
+
+.onboarding-screen.personalise-screen .personalise-form .onboard-field > span {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.onboarding-screen.personalise-screen .personalise-form .onboard-field input,
+.onboarding-screen.personalise-screen .personalise-form .onboard-field select {
+  width: 346px;
+  height: 56px;
+  flex: 0 0 56px;
+  border: 2px solid #bcc2ca;
+  border-radius: 12px;
+  background: #fff;
+  color: #292e36;
+}
+
+.onboarding-screen.personalise-screen .personalise-form .onboard-field input:focus,
+.onboarding-screen.personalise-screen .personalise-form .onboard-field select:focus {
+  border-color: #1d4975;
+  box-shadow: 0 0 0 3px rgba(29, 73, 117, .14);
+  outline: none;
+}
+
+.onboarding-screen.personalise-screen .personalise-form .select-chevron {
+  z-index: 2;
+}
+
+.onboarding-screen.personalise-screen .personalise-form .photo-upload {
+  position: absolute;
+  left: 28px;
+  top: 546px;
+  width: 346px;
+  height: 95px;
+  z-index: 7;
+  opacity: 1;
+  pointer-events: auto;
+  background: #fff;
+}
+
+.onboarding-screen.personalise-screen .personalise-form .photo-upload:focus-within {
+  outline: 3px solid rgba(29, 73, 117, .72);
+  outline-offset: 2px;
+}
+
+.onboarding-screen.personalise-screen .personalise-form .photo-note {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.onboarding-screen.personalise-screen .personalise-form #personaliseError {
+  position: absolute;
+  left: 28px;
+  top: 646px;
+  width: 346px;
+  z-index: 8;
+  opacity: 1;
+  pointer-events: none;
+  text-align: center;
+}
+
+.onboarding-screen.personalise-screen #createSleepetButton {
+  position: absolute;
+  left: 28px;
+  top: 713px;
+  width: 346px;
+  height: 64px;
+  z-index: 7;
+  opacity: 1;
+  pointer-events: auto;
+  margin: 0;
+  color: #082b5b;
+  background: #d9eef7;
+  box-shadow: 0 0 6px rgba(212, 231, 237, .72);
+}
+
+.onboarding-screen.personalise-screen #createSleepetButton:active {
+  transform: translateY(1px);
+}
+
+/* Home compatibility: restore the GitHub baseline layout after the global
+ * Figma onboarding rules. Keep this scoped so collaborators can animate Home
+ * without changing the onboarding interaction layer. */
+.onboarding-screen.home-screen {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: #fff;
+  background: #0a2f61 url("./assets/onboarding/raw/home-raw-01.png") center top / cover no-repeat;
+}
+
+.onboarding-screen.home-screen > :not(.screen-reference) {
+  position: absolute;
+  z-index: auto;
+}
+
+/* Keep the compatibility layout from overriding the shared hidden state. */
+.onboarding-screen.home-screen[hidden] {
+  display: none;
+}

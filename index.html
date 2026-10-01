@@ -5,13 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sleepet Onboarding + Preferences Demo</title>
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./onboarding-interactions.css" />
+    <link rel="stylesheet" href="./preferences-overrides.css" />
   </head>
   <body>
     <main class="demo-shell">
       <p class="demo-label">Sleepet · Preferences interactive demo</p>
       <div class="phone" id="phone" aria-label="Sleepet preferences page">
         <section class="onboarding-layer" id="onboardingLayer" aria-label="Sleepet onboarding">
+          <section class="onboarding-screen splash-screen is-active" data-screen="splash" aria-label="Sleepet welcome animation">
+            <div class="splash-overlay" aria-hidden="true">
+              <div class="splash-symbol" data-node-id="264:882"><img src="./assets/onboarding/splash/symbol.svg" alt="" /></div>
+              <div class="splash-wordmark" data-node-id="264:888">
+                <span class="splash-letter splash-letter-s" data-node-id="264:889"><span class="splash-letter-shape"><img src="./assets/onboarding/splash/letter-s.svg" alt="" /></span></span>
+                <span class="splash-letter splash-letter-l" data-node-id="264:890"><span class="splash-letter-shape"><img src="./assets/onboarding/splash/letter-l.svg" alt="" /></span></span>
+                <span class="splash-letter splash-letter-e1" data-node-id="264:891"><span class="splash-letter-shape"><img src="./assets/onboarding/splash/letter-e-1.svg" alt="" /></span></span>
+                <span class="splash-letter splash-letter-e2" data-node-id="264:892"><span class="splash-letter-shape"><img src="./assets/onboarding/splash/letter-e-2.svg" alt="" /></span></span>
+                <span class="splash-letter splash-letter-p" data-node-id="264:893"><span class="splash-letter-shape"><img src="./assets/onboarding/splash/letter-p.svg" alt="" /></span></span>
+                <span class="splash-letter splash-letter-e3" data-node-id="264:894"><span class="splash-letter-shape"><img src="./assets/onboarding/splash/letter-e-3.svg" alt="" /></span></span>
+                <span class="splash-letter splash-letter-t" data-node-id="264:895"><span class="splash-letter-shape"><img src="./assets/onboarding/splash/letter-t.svg" alt="" /></span></span>
+              </div>
+              <div class="splash-account-group" data-node-id="264:2234">
+                <div class="splash-account-welcome" data-node-id="264:2235">Welcome</div>
+                <div class="splash-account-label splash-account-email-label" data-node-id="264:2236">Email</div>
+                <div class="splash-account-field splash-account-email-field" data-node-id="264:2237">you@example.com</div>
+                <div class="splash-account-label splash-account-password-label" data-node-id="264:2238">Password</div>
+                <div class="splash-account-field splash-account-password-field" data-node-id="264:2239">••••••••</div>
+                <div class="splash-account-create" data-node-id="264:2240">Create account</div>
+                <div class="splash-account-divider" data-node-id="264:2241"><span></span><b>or</b><span></span></div>
+                <div class="splash-account-login" data-node-id="264:2244">Log in</div>
+                <div class="splash-account-terms" data-node-id="264:2245">By continuing, you agree to our<br />Terms and Privacy Policy.</div>
+              </div>
+            </div>
+          </section>
           <section class="onboarding-screen account-screen is-active" data-screen="account" aria-labelledby="accountTitle">
+            <img class="screen-reference" src="./assets/onboarding/latest/account.png" alt="" aria-hidden="true" />
             <div class="account-brand">Sleepet</div>
             <h1 id="accountTitle">Welcome</h1>
             <form class="account-form" id="accountForm" novalidate>
@@ -26,6 +54,7 @@
           </section>
 
           <section class="onboarding-screen companion-screen" data-screen="companion" aria-labelledby="companionTitle" hidden>
+            <img class="screen-reference" src="./assets/onboarding/latest/choose.png" alt="" aria-hidden="true" />
             <div class="onboarding-topbar"><button class="back-button" data-back="account" type="button" aria-label="Back to account"><img src="./assets/onboarding/svg/back-step.svg" alt="" /></button><span>1 of 3</span><span class="topbar-spacer"></span></div>
             <h1 id="companionTitle">Choose your companion</h1>
             <p class="onboarding-subtitle">You can change this later.</p>
@@ -38,6 +67,7 @@
           </section>
 
           <section class="onboarding-screen personalise-screen" data-screen="personalise" aria-labelledby="personaliseTitle" hidden>
+            <img class="screen-reference" src="./assets/onboarding/latest/personalise.png" alt="" aria-hidden="true" />
             <div class="onboarding-topbar"><button class="back-button" data-back="companion" type="button" aria-label="Back to companion choice"><img src="./assets/onboarding/svg/back-step.svg" alt="" /></button><span>2 of 3</span><span class="topbar-spacer"></span></div>
             <h1 id="personaliseTitle">Personalise your pet</h1>
             <form class="personalise-form" id="personaliseForm">
@@ -52,13 +82,16 @@
           </section>
 
           <section class="onboarding-screen creating-screen" data-screen="creating" aria-labelledby="creatingTitle" hidden>
+            <img class="screen-reference" src="./assets/onboarding/latest/creating.png" alt="" aria-hidden="true" />
             <h1 id="creatingTitle">Creating your Sleepet...</h1>
             <img class="loading-dots" src="./assets/onboarding/svg/creating-dot.svg" alt="Creation in progress" />
+            <div class="loading-dots-live" aria-label="Creation in progress" role="status"><span></span><span></span><span></span><span></span></div>
             <img class="creating-dog" src="./assets/onboarding/svg/creating-dog.svg" alt="" />
             <p>A quiet companion<br />is on the way.</p>
           </section>
 
           <section class="onboarding-screen meet-screen" data-screen="meet" aria-labelledby="meetTitle" hidden>
+            <img class="screen-reference" src="./assets/onboarding/latest/meet.png" alt="" aria-hidden="true" />
             <span class="step-count">3 of 3</span>
             <h1 id="meetTitle">Meet <span id="meetPetName">Mocha</span></h1>
             <div class="meet-pet-wrap"><div class="meet-pet-art" aria-label="Your new Sleepet"></div><img class="meet-speech" src="./assets/onboarding/svg/meet-speech.svg" alt="" /><p class="meet-speech-copy">Hi, I’m<br /><span id="meetSpeechName">Mocha</span>.</p></div>
@@ -213,7 +246,7 @@
               <h3>WIND-DOWN</h3>
               <div class="duration-inputs"><label><input id="windMinutes" inputmode="numeric" maxlength="2" value="20" /><span>Minutes</span></label><label><input id="windSeconds" inputmode="numeric" maxlength="2" value="00" /><span>Seconds</span></label></div>
             </div>
-            <div class="sheet-actions"><span class="clock-glyph">◷</span><button class="sheet-pill" id="cancelTime" type="button">Cancel</button><button class="sheet-pill" id="saveTime" type="button">Save</button></div>
+            <div class="sheet-actions"><span class="clock-glyph" aria-hidden="true"><img src="./assets/clock/time-settings-enable.svg" alt="" /></span><button class="sheet-pill" id="cancelTime" type="button">Cancel</button><button class="sheet-pill" id="saveTime" type="button">Save</button></div>
           </section>
         </div>
 
