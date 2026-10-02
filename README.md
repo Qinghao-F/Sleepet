@@ -1,5 +1,5 @@
 # Sleepet onboarding + Preferences demo
-
+live demo: https://qinghao-f.github.io/Sleepet/
 Open `index.html` in a browser. The first screen is the local onboarding flow: animated splash → account → companion choice → personalisation → creating state → Meet → Home. Use the Me icon on Home to return to Preferences.
 
 The updated onboarding frames are based on Figma nodes `264:808`, `264:559`, `264:523`, `264:501`, `264:481`, and `264:471`. All local UI text uses the `PingFang SC` font stack. The splash uses the supplied Symbol/letter SVGs under `assets/onboarding/splash/`, keeps the Account group on the same 4-second timeline, and includes a reduced-motion fallback. `sleepet_1.svg` and `sleepet_2.svg` are retained as the start/end wordmark spacing references.
