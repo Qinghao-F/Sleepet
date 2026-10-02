@@ -256,7 +256,7 @@ button { border: 0; cursor: pointer; }
 .onboarding-layer { background: #001b4a; color: #292e36; font-family: "PingFang SC", "PingFang TC", Arial, sans-serif; }
 .onboarding-screen { display: block; overflow: hidden; background: linear-gradient(180deg, #001b4a 0%, #86c4e4 27%, #4384c1 65.428%, #001a4b 100%); }
 .screen-reference { position: absolute; z-index: 0; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; user-select: none; }
-.onboarding-screen:not(.sleep-monitor-screen):not(.wake-medium-screen):not(.morning-screen):not(.morning-setting-screen) > :not(.screen-reference) { position: relative; z-index: 2; }
+.onboarding-screen:not(:where(.sleep-monitor-screen, .wake-medium-screen, .morning-screen, .morning-setting-screen)) > :not(.screen-reference) { position: relative; z-index: 2; }
 
 /* Splash motion — Figma node 264:808, one shared 4s timeline. */
 .splash-screen { background: linear-gradient(180deg, rgb(0, 27, 74) 0%, rgb(134, 196, 228) 27%, rgb(67, 132, 193) 65.428%, rgb(0, 26, 75) 100%); }
