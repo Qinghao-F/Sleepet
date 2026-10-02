@@ -6,7 +6,7 @@ Open `index.html` in a browser. The first screen is the local onboarding flow: a
 
 The updated onboarding frames are based on Figma nodes `264:808`, `264:559`, `264:523`, `264:501`, `264:481`, and `264:471`. All local UI text uses the `PingFang SC` font stack. The splash uses the supplied Symbol/letter SVGs under `assets/onboarding/splash/`, keeps the Account group on the same 4-second timeline, and includes a reduced-motion fallback. `sleepet_1.svg` and `sleepet_2.svg` are retained as the start/end wordmark spacing references.
 
-The demo covers the Preferences page, schedule bottom sheet, pet-selection bottom sheet, scrolling, slider state, and save/cancel/backdrop interactions.
+The demo covers the Preferences page, schedule bottom sheet, pet-selection bottom sheet, scrolling, slider state, and save/cancel/backdrop interactions. From Home, choose “Ready to sleep” for the sleep monitor and wake-up flow; the morning routine and tomorrow-planning screens then return to Home.
 
 The 24-hour dial uses the supplied `assets/clock/` layers. Drag either endpoint to adjust bedtime or wake-up time; the endpoint snaps to 30-minute increments and updates the summary above the dial. The time sheet remains available for precise minute-level edits.
 

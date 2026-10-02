@@ -80,6 +80,7 @@ function renderOnboarding() {
   $("homePetName").textContent = name;
   $("homeReadyName").textContent = name;
   $("homeMeetName").textContent = name;
+  $("homePetArt").setAttribute("aria-label", `Pet ${name}`);
   $("petNameInput").value = name;
   $("petBreed").value = onboardingState.breed;
   $("petColour").value = onboardingState.colour;
@@ -163,6 +164,13 @@ $("petPhoto").addEventListener("change", (event) => {
 $("meetContinue").addEventListener("click", showHome);
 $("meetChange").addEventListener("click", () => showOnboardingScreen("personalise"));
 $("homeProfileButton").addEventListener("click", showPreferences);
+
+let homePetExpressionTimer;
+$("homePetArt").addEventListener("click", () => {
+  $("homePetArt").classList.add("is-happy");
+  window.clearTimeout(homePetExpressionTimer);
+  homePetExpressionTimer = window.setTimeout(() => $("homePetArt").classList.remove("is-happy"), 3000);
+});
 
 function scheduleToHours(hour, minute, period) {
   let value = Number(hour) % 12;
@@ -373,3 +381,5 @@ document.querySelector('.bottom-nav button[aria-label="Me"]').addEventListener("
 
 showOnboardingScreen("splash");
 renderMain();
+
+if (new URLSearchParams(window.location.search).get("preview") === "home") showHome();
