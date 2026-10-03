@@ -210,13 +210,17 @@ button { border: 0; cursor: pointer; }
 .home-battery { width: 24px; height: 12px; border: 1.5px solid #fff; border-radius: 3px; position: relative; }
 .home-battery::after { content: ""; position: absolute; right: -4px; top: 3px; width: 2px; height: 5px; border-radius: 0 2px 2px 0; background: #fff; }
 .home-greeting { position: absolute; left: 28px; top: 78px; margin: 0; color: #fff; font: 400 19px/24px Roboto, Arial, sans-serif; }
-.routine-pill { position: absolute; left: 21px; top: 111px; width: 318px; height: 45px; display: flex; align-items: center; gap: 10px; padding: 0 10px 0 4px; border-radius: 24px; color: #fff; background: rgba(4,43,91,.88); font: 400 15px/20px Roboto, Arial, sans-serif; text-align: left; }
+.routine-pill { position: absolute; left: 21px; top: 111px; width: 318px; height: 45px; display: flex; align-items: center; gap: 10px; padding: 0 10px 0 4px; border-radius: 24px; color: #fff; background: linear-gradient(100deg, rgba(8,33,77,.85) 0%, rgba(11,36,78,.9) 56%, rgba(19,47,89,.84) 100%); font: 400 15px/20px Roboto, Arial, sans-serif; text-align: left; }
 .routine-icon { width: 36px; height: 36px; border-radius: 50%; }
 .routine-arrows { width: 45px; height: 20px; margin-left: auto; overflow: hidden; }
 .routine-arrows img { display: block; width: 91px; height: 85px; max-width: none; transform: translate(-15px, -5px); }
-.home-message { position: absolute; left: 139px; top: 366px; width: 183px; height: 65px; display: flex; align-items: center; padding: 0 15px; border: 1px solid rgba(255,255,255,.35); border-radius: 19px; color: #fff; background: rgba(25,81,137,.68); font: 400 15px/19px Roboto, Arial, sans-serif; }
-.home-pet-art { position: absolute; left: 39px; top: 438px; width: 153px; height: 180px; background-image: url("./assets/onboarding/mocha-sitting.png"); background-repeat: no-repeat; background-size: auto 100%; background-position: center; }
-.home-pet-hint { position: absolute; left: 44px; top: 621px; margin: 0; color: #e2eff9; font: italic 13px/18px Roboto, Arial, sans-serif; }
+.home-message { position: absolute; left: 139px; bottom: 443px; width: max-content; max-width: 244px; min-height: 65px; display: flex; align-items: center; padding: 10px 15px; border: 1px solid rgba(255,255,255,.35); border-radius: 19px; color: #fff; background: rgba(25,81,137,.68); font: 400 15px/19px Roboto, Arial, sans-serif; transition: width 350ms ease, height 350ms ease; }
+.home-message-text { display: block; white-space: pre-line; opacity: 1; transform: translateY(0); transition: opacity 180ms ease, transform 180ms ease; }
+.home-message-text.is-fading { opacity: 0; transform: translateY(3px); }
+.home-pet-art { position: absolute; left: 39px; top: 438px; width: 153px; height: 180px; padding: 0; border: 0; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.home-pet-art:focus-visible { outline: 2px solid #e2eff9; outline-offset: 5px; border-radius: 18px; }
+.home-pet-art img { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+.home-pet-hint { position: absolute; left: 44px; top: 621px; margin: 0; color: #e2eff9; font: italic 13px/18px Roboto, Arial, sans-serif; pointer-events: none; }
 .home-primary, .home-secondary { position: absolute; left: 21px; width: 360px; height: 51px; border-radius: 26px; font: 400 18px/23px Roboto, Arial, sans-serif; cursor: pointer; }
 .home-primary { top: 660px; color: #082b5b; background: #d9eef7; }
 .home-secondary { top: 725px; border: 1px solid #d9eef7; color: #fff; background: rgba(4,43,91,.38); }
@@ -227,6 +231,7 @@ button { border: 0; cursor: pointer; }
 
 @media (prefers-reduced-motion: reduce) {
   .onboarding-screen, .onboard-primary, .onboard-secondary { transition: none !important; }
+  .home-message, .home-message-text { transition: none; }
 }
 
 @media (max-width: 460px) {
@@ -240,7 +245,7 @@ button { border: 0; cursor: pointer; }
 .onboarding-layer { background: #001b4a; color: #292e36; font-family: "PingFang SC", "PingFang TC", Arial, sans-serif; }
 .onboarding-screen { display: block; overflow: hidden; background: linear-gradient(180deg, #001b4a 0%, #86c4e4 27%, #4384c1 65.428%, #001a4b 100%); }
 .screen-reference { position: absolute; z-index: 0; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; user-select: none; }
-.onboarding-screen > :not(.screen-reference) { position: relative; z-index: 2; }
+.onboarding-screen:not(:where(.sleep-monitor-screen, .wake-medium-screen, .morning-screen, .morning-setting-screen)) > :not(.screen-reference) { position: relative; z-index: 2; }
 
 /* Splash motion — Figma node 264:808, one shared 4s timeline. */
 .splash-screen { background: linear-gradient(180deg, rgb(0, 27, 74) 0%, rgb(134, 196, 228) 27%, rgb(67, 132, 193) 65.428%, rgb(0, 26, 75) 100%); }

@@ -36,6 +36,7 @@
 - Motion checks: splash runs once for 4 seconds on one shared timeline; the supplied Symbol and seven letter SVGs use the Figma translate/scale/height tracks; the Account group enters from 681px during the final 22.5% of the timeline; creating dots and puppy pulse on an 800 ms loop; `prefers-reduced-motion` disables the loops and shortens the splash.
 - Interaction checks: empty account validation, account-to-companion transition, 1.6-second creating transition, dynamic pet name across Meet/Home, direct Log in to Home, and navigation back to Preferences.
 - Visual checks: each state stays inside the 402 × 874 phone frame; the latest Figma export is used as the visual layer while inputs/buttons remain live above it; the existing clock and Preferences sheets remain available.
-- Scope note: this is a local demo without real authentication, persistence, or backend calls. Deferred Sound, Preview, Privacy & data, Accessibility, and other support destinations remain intentionally out of scope.
+- Flow integration: verified the Home entry to the sleep monitor, the wake-up handoff, morning rating/routine steps, tomorrow-planning screen, and return to Home. The existing splash, onboarding, clock, and Preferences sheets remain available.
+- Scope note: this is a local demo without real authentication or backend calls. Morning routine choices persist only in local browser storage. Deferred Sound, Preview, Privacy & data, Accessibility, and other support destinations remain intentionally out of scope.
 
 final result: passed

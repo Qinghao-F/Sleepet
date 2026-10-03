@@ -38,20 +38,39 @@ const onboardingScreens = [...document.querySelectorAll(".onboarding-screen")];
 const onboardingLayer = $("onboardingLayer");
 let splashTimer = null;
 let timeClockDraft = state.timeClockEnabled;
+const stagedMorningScreens = new Set(["wake-medium", "morning-rating", "morning-drink", "morning-stretch", "morning-end"]);
+let stagedMorningTimer = null;
+let stagedMorningScreen = null;
 
 function showOnboardingScreen(name) {
   window.clearTimeout(splashTimer);
+  if (stagedMorningTimer !== null) window.clearTimeout(stagedMorningTimer);
+  stagedMorningTimer = null;
+  stagedMorningScreen?.classList.remove("is-entering");
+  stagedMorningScreen = null;
   onboardingState.screen = name;
   // Browsers may scroll the clipped phone when an input receives focus.
   // Reset it on every screen change so the 402 × 874 frame stays anchored.
   $("phone").scrollTop = 0;
+  let activeScreen = null;
   onboardingScreens.forEach((screen) => {
     const active = screen.dataset.screen === name;
+    if (active) activeScreen = screen;
     screen.hidden = !active;
     screen.setAttribute("aria-hidden", String(!active));
   });
   onboardingLayer.classList.remove("is-hidden");
   renderOnboarding();
+  if (activeScreen && stagedMorningScreens.has(name) && !window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+    void activeScreen.offsetWidth;
+    activeScreen.classList.add("is-entering");
+    stagedMorningScreen = activeScreen;
+    stagedMorningTimer = window.setTimeout(() => {
+      activeScreen.classList.remove("is-entering");
+      stagedMorningScreen = null;
+      stagedMorningTimer = null;
+    }, 1450);
+  }
   if (name === "splash") {
     const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     splashTimer = window.setTimeout(() => showOnboardingScreen("account"), reducedMotion ? 80 : 4000);
@@ -80,6 +99,7 @@ function renderOnboarding() {
   $("homePetName").textContent = name;
   $("homeReadyName").textContent = name;
   $("homeMeetName").textContent = name;
+  $("homePetArt").setAttribute("aria-label", `Hear another message from ${name}`);
   $("petNameInput").value = name;
   $("petBreed").value = onboardingState.breed;
   $("petColour").value = onboardingState.colour;
@@ -163,6 +183,66 @@ $("petPhoto").addEventListener("change", (event) => {
 $("meetContinue").addEventListener("click", showHome);
 $("meetChange").addEventListener("click", () => showOnboardingScreen("personalise"));
 $("homeProfileButton").addEventListener("click", showPreferences);
+const homeMessages = [
+  "Take it slow tonight,\nI\u2019m here..",
+  "You can rest now,\nI\u2019ll stay close.",
+  "Let the day fade,\nI\u2019m right here.",
+  "No need to rush,\nI\u2019m beside you.",
+  "We can slow down now,\ntogether."
+];
+const homeBubble = $("homeMessage");
+const homeMessageText = $("homeMessageText");
+let homeMessageIndex = 0;
+let homeMessageChanging = false;
+homeMessageText.textContent = homeMessages[0];
+
+function measureHomeBubble(message) {
+  const probe = document.createElement("div");
+  const probeText = document.createElement("span");
+  probe.className = "home-message";
+  probe.style.visibility = "hidden";
+  probe.style.transition = "none";
+  probe.setAttribute("aria-hidden", "true");
+  probeText.className = "home-message-text";
+  probeText.textContent = message;
+  probe.append(probeText);
+  homeBubble.parentElement.append(probe);
+  const size = { width: probe.offsetWidth, height: probe.offsetHeight };
+  probe.remove();
+  return size;
+}
+
+$("homePetArt").addEventListener("click", () => {
+  if (homeMessageChanging) return;
+  const nextIndex = (homeMessageIndex + 1) % homeMessages.length;
+  const nextMessage = homeMessages[nextIndex];
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    homeMessageText.textContent = nextMessage;
+    homeMessageIndex = nextIndex;
+    return;
+  }
+  homeMessageChanging = true;
+  homeMessageText.classList.add("is-fading");
+  window.setTimeout(() => {
+    const currentSize = { width: homeBubble.offsetWidth, height: homeBubble.offsetHeight };
+    const nextSize = measureHomeBubble(nextMessage);
+    homeBubble.style.width = `${currentSize.width}px`;
+    homeBubble.style.height = `${currentSize.height}px`;
+    homeMessageText.textContent = nextMessage;
+    homeMessageIndex = nextIndex;
+    void homeBubble.offsetWidth;
+    window.requestAnimationFrame(() => {
+      homeBubble.style.width = `${nextSize.width}px`;
+      homeBubble.style.height = `${nextSize.height}px`;
+      window.setTimeout(() => homeMessageText.classList.remove("is-fading"), 140);
+      window.setTimeout(() => {
+        homeBubble.style.removeProperty("width");
+        homeBubble.style.removeProperty("height");
+        homeMessageChanging = false;
+      }, 390);
+    });
+  }, 180);
+});
 
 function scheduleToHours(hour, minute, period) {
   let value = Number(hour) % 12;
@@ -373,3 +453,5 @@ document.querySelector('.bottom-nav button[aria-label="Me"]').addEventListener("
 
 showOnboardingScreen("splash");
 renderMain();
+
+if (new URLSearchParams(window.location.search).get("preview") === "home") showHome();

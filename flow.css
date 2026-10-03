@@ -1,0 +1,58 @@
+/* Sleep monitor and medium-night wake-up flow */
+.sleep-monitor-screen, .wake-medium-screen { display: block; overflow: hidden; font-family: "PingFang SC", Roboto, Arial, sans-serif; }
+.sleep-monitor-screen { color: #fff; background: linear-gradient(180deg, #001b4a 0%, #86c4e4 27%, #4384c1 65.428%, #001a4b 100%); }
+.flow-status-bar { position: absolute; z-index: 2; left: 56px; right: 37px; top: 20px; height: 22px; display: flex; align-items: center; justify-content: space-between; color: #fff; font: 600 17px/22px Roboto, Arial, sans-serif; }
+.flow-status-bar .home-status-icons { gap: 5px; }
+.sleep-monitor-time { position: absolute; left: 86px; top: 77px; display: flex; align-items: baseline; gap: 10px; color: #fff; font-size: 90px; font-weight: 400; line-height: 126px; letter-spacing: -2px; white-space: nowrap; }
+.sleep-monitor-period { font-size: 40px; line-height: 56px; letter-spacing: 0; }
+.sleep-mode-wrap { position: absolute; z-index: 4; left: 118px; top: 200px; width: 165px; }
+.sleep-mode-toggle { width: 165px; height: 32px; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 20px; color: #fff; background: #001b4a; font: 400 14px/20px "PingFang SC", Roboto, Arial, sans-serif; white-space: nowrap; }
+.sleep-mode-toggle img { width: 11px; height: 12px; }
+.sleep-mode-menu { position: absolute; top: 39px; left: 0; width: 168px; padding: 5px; border: 1px solid rgba(255,255,255,.45); border-radius: 13px; background: rgba(0,27,74,.94); box-shadow: 0 8px 20px rgba(0,18,51,.25); }
+.sleep-mode-menu[hidden], .sleep-stop-duration[hidden] { display: none; }
+.sleep-mode-menu > button { width: 100%; min-height: 34px; display: flex; align-items: center; justify-content: space-between; padding: 4px 9px; border-radius: 8px; color: #fff; background: transparent; font: 400 13px/18px "PingFang SC", Roboto, Arial, sans-serif; text-align: left; }
+.sleep-mode-menu > button:hover, .sleep-mode-menu > button:focus-visible { background: rgba(255,255,255,.16); }
+.sleep-stop-duration { display: flex; align-items: center; justify-content: space-around; color: #fff; font: 14px/20px Roboto, Arial, sans-serif; }
+.sleep-stop-duration button { width: 27px; height: 25px; border-radius: 8px; color: #fff; background: rgba(255,255,255,.18); font-size: 18px; }
+.sleep-pet-art { position: absolute; left: 64px; top: 291px; width: 283px; height: 162px; overflow: hidden; transform-origin: 50% 60%; will-change: transform; animation: sleep-mocha-rock 5.6s ease-in-out infinite; }
+.sleep-pet-art img { position: absolute; left: -447px; top: -65px; width: 730px; height: 486px; max-width: none; }
+.sleep-control { position: absolute; left: 56px; right: 46px; height: 31px; display: flex; align-items: center; justify-content: space-between; color: #fff; font: 500 18px/25px "PingFang SC", Roboto, Arial, sans-serif; }
+.sleep-alarm-control { top: 556px; }
+.sleep-music-control { top: 602px; }
+.sleep-alarm-picker { width: 137px; height: 30px; display: flex; align-items: center; justify-content: space-between; padding: 0 7px; border: 1px solid #fff; border-radius: 10px; background: rgba(255,255,255,.11); font-weight: 400; white-space: nowrap; }
+.sleep-alarm-picker button { width: 20px; height: 26px; padding: 0; color: #fff; background: transparent; font: 27px/22px Arial, sans-serif; }
+.sleep-alarm-picker span { font-weight: 400; white-space: nowrap; }
+.sleep-music-picker { min-width: 100px; height: 31px; display: flex; align-items: center; justify-content: space-between; gap: 22px; padding: 0 5px; color: #fff; background: transparent; font: 400 18px/25px "PingFang SC", Roboto, Arial, sans-serif; }
+.sleep-music-picker > span:last-child { font: 26px/20px Arial, sans-serif; }
+.sleep-slide { --slide-distance: 0px; --slide-fill-width: 64px; --slide-fill-opacity: .05; --slide-halo-opacity: .22; --slide-text-opacity: 1; position: absolute; left: 56px; top: 725px; width: 283px; height: 69px; overflow: hidden; border: 1px solid #fff; border-radius: 10px; color: #fff; background: rgba(5,36,80,.14); cursor: grab; touch-action: none; user-select: none; transition: border-color .3s ease, box-shadow .3s ease; }
+.sleep-slide:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.sleep-slide.is-active { border-color: #d6f3ff; box-shadow: 0 0 15px rgba(86,190,255,.3), inset 0 0 12px rgba(118,215,255,.12); }
+.sleep-slide.is-complete { box-shadow: 0 0 22px rgba(93,211,255,.58), inset 0 0 18px rgba(119,222,255,.25); }
+.sleep-slide.is-dragging { cursor: grabbing; }
+.sleep-slide.is-dragging .sleep-slide-fill, .sleep-slide.is-dragging .sleep-slide-handle { transition: none; }
+.sleep-slide-fill { position: absolute; inset: 0 auto 0 0; width: var(--slide-fill-width); border-radius: 9px; opacity: var(--slide-fill-opacity); background: linear-gradient(90deg, #14559c 0%, #2d82cf 50%, #5bc9f1 100%); box-shadow: 0 0 24px rgba(83,195,255,.5); pointer-events: none; transition: width .36s cubic-bezier(.22,1,.36,1), opacity .2s ease; }
+.sleep-slide-fill::after { content: ""; position: absolute; top: 0; right: -18px; width: 64px; height: 100%; background: linear-gradient(90deg, transparent, rgba(188,241,255,.7), transparent); filter: blur(9px); animation: sleep-slide-sheen 1.8s ease-in-out infinite alternate; }
+.sleep-slide-handle { position: absolute; left: 14px; top: 10px; width: 49px; height: 49px; transform: translateX(var(--slide-distance)); pointer-events: none; transition: transform .36s cubic-bezier(.22,1,.36,1); }
+.sleep-slide-handle::before { content: ""; position: absolute; inset: -8px; border-radius: 50%; opacity: var(--slide-halo-opacity); background: radial-gradient(circle, rgba(125,220,255,.95), rgba(42,144,231,.55) 48%, transparent 76%); filter: blur(6px); animation: sleep-slide-halo 2.4s ease-in-out infinite; transition: opacity .2s ease; }
+.sleep-slide-handle img { position: relative; z-index: 1; display: block; width: 49px; height: 49px; }
+.sleep-slide-text { position: absolute; left: 81px; right: 5px; top: 20px; color: #fff; opacity: var(--slide-text-opacity); font: 400 20px/28px "PingFang SC", Roboto, Arial, sans-serif; white-space: nowrap; pointer-events: none; transition: opacity .2s ease; }
+.sleep-charging-hint { position: absolute; left: 0; right: 0; top: 801px; margin: 0; color: #7b7b7b; font: 400 12px/17px "PingFang SC", Roboto, Arial, sans-serif; text-align: center; }
+.wake-medium-screen { color: #fff; background: #87acc9; }
+.wake-scene-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; pointer-events: none; }
+.wake-eyebrow { position: absolute; left: 0; right: 0; top: 54px; margin: 0; color: #fff; font: 400 14px/20px Roboto, Arial, sans-serif; text-align: center; }
+.wake-medium-screen h1 { position: absolute; left: 55px; top: 91px; width: 294px; margin: 0; color: #010d37; font: 500 30px/35px "PingFang SC", Roboto, Arial, sans-serif; text-align: center; }
+.wake-reassurance { position: absolute; left: 48px; right: 48px; top: 171px; margin: 0; color: #404040; font: 400 18px/25px "PingFang SC", Roboto, Arial, sans-serif; text-align: center; white-space: nowrap; }
+.wake-primary { position: absolute; left: 75px; top: 770px; width: 262px; height: 43px; border: 1px solid #fff; border-radius: 22px; color: #fff; background: rgba(3,69,121,.2); box-shadow: 0 0 8px #0072ff; font: 500 22px/31px "PingFang SC", Roboto, Arial, sans-serif; }
+.wake-data-link { position: absolute; left: 45px; top: 821px; width: 321px; height: 33px; color: #fff; background: transparent; font: 400 15px/21px "PingFang SC", Roboto, Arial, sans-serif; text-decoration: underline; text-underline-offset: 2px; }
+@keyframes sleep-slide-halo { 0%, 100% { transform: scale(.94); } 50% { transform: scale(1.08); } }
+@keyframes sleep-slide-sheen { from { transform: translateX(-12px); } to { transform: translateX(12px); } }
+@keyframes sleep-mocha-rock {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  25% { transform: translate(-2px, -2px) rotate(-1.8deg); }
+  50% { transform: translateY(-3px) rotate(0); }
+  75% { transform: translate(2px, -2px) rotate(1.8deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sleep-pet-art, .sleep-slide-handle::before, .sleep-slide-fill::after { animation: none; }
+  .sleep-slide, .sleep-slide-fill, .sleep-slide-handle, .sleep-slide-text { transition: none; }
+}
