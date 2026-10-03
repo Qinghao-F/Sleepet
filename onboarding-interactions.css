@@ -228,6 +228,30 @@
   z-index: auto;
 }
 
+.onboarding-screen.home-screen > .home-landscape {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center top;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Moonlit foreground stays above Mocha while controls remain clear and clickable. */
+.onboarding-screen.home-screen > .home-pet-art { z-index: 1; }
+.onboarding-screen.home-screen > .home-foreground {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.onboarding-screen.home-screen > :not(.home-landscape):not(.home-pet-art):not(.home-foreground) { z-index: 3; }
 /* Keep the compatibility layout from overriding the shared hidden state. */
 .onboarding-screen.home-screen[hidden] {
   display: none;

@@ -3,7 +3,7 @@
   const SETTINGS_KEY = "sleepet-morning-settings-v1";
   const RATING_KEY = "sleepet-morning-rating-v1";
   const ratingNames = ["Exhausted", "Tired", "Okay", "Refreshed", "Energetic"];
-  const stretchStageMs = new URLSearchParams(window.location.search).has("preview") ? 2000 : 100000;
+  const stretchStageMs = 2000; // Four displayed checkpoints over six seconds for the demo.
   const suggestions = ["Go grocery shopping", "Group meeting", "Call dad to celebrate his birthday", "Gym day"];
   const iconFor = (value) => /grocery|shop/i.test(value) ? "./assets/flow/todos-grocery.svg" : /meeting|group/i.test(value) ? "./assets/flow/todos-meeting.svg" : /email|mail/i.test(value) ? "./assets/flow/todos-email.svg" : "";
   const tomorrow = () => {
@@ -37,47 +37,125 @@
   let stretchDeadline = 0;
   let stretchRemaining = 300;
   let leavingEnd = false;
+  const endScreen = document.querySelector('[data-screen="morning-end"]');
+  const endVideo = byId("endLandscapeVideo");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const drinkScreen = document.querySelector('[data-screen="morning-drink"]');
+  const drinkVideo = byId("drinkMochaVideo");
+  drinkVideo.defaultPlaybackRate = 0.75;
+  drinkVideo.playbackRate = 0.75;
+  const onboardingLayer = byId("onboardingLayer");
+  let wasOnDrinkScreen = false;
+  const syncDrinkVideo = () => {
+    const onDrinkScreen = !drinkScreen.hidden && !onboardingLayer.classList.contains("is-hidden");
+    if (onDrinkScreen && !wasOnDrinkScreen) {
+      try { drinkVideo.currentTime = 0; } catch {}
+    }
+    wasOnDrinkScreen = onDrinkScreen;
+    if (!onDrinkScreen || reducedMotion.matches) {
+      drinkVideo.pause();
+      return;
+    }
+    drinkVideo.playbackRate = 0.75;
+    const playback = drinkVideo.play();
+    if (playback?.catch) playback.catch(() => {});
+  };
+  new MutationObserver(syncDrinkVideo).observe(drinkScreen, { attributes: true, attributeFilter: ["hidden"] });
+  new MutationObserver(syncDrinkVideo).observe(onboardingLayer, { attributes: true, attributeFilter: ["class"] });
+  drinkVideo.addEventListener("canplay", syncDrinkVideo);
+  document.addEventListener("visibilitychange", syncDrinkVideo);
+  reducedMotion.addEventListener?.("change", syncDrinkVideo);
+  window.addEventListener("pagehide", () => drinkVideo.pause());
+  window.addEventListener("pageshow", syncDrinkVideo);
+  endVideo.defaultPlaybackRate = 0.75;
+  const syncEndVideo = (active, restart = false) => {
+    if (restart) {
+      endVideo.pause();
+      endVideo.classList.remove("is-playing");
+      try { endVideo.currentTime = 0; } catch {}
+    }
+    if (!active || reducedMotion.matches) {
+      endVideo.pause();
+      endVideo.classList.remove("is-playing");
+      return;
+    }
+    if (endVideo.ended) {
+      endVideo.classList.add("is-playing");
+      return;
+    }
+    endVideo.playbackRate = 0.75;
+    const playback = endVideo.play();
+    if (playback?.catch) playback.catch(() => endVideo.classList.remove("is-playing"));
+  };
+  endVideo.addEventListener("playing", () => {
+    if (!endScreen.hidden && !reducedMotion.matches) endVideo.classList.add("is-playing");
+  });
+  endVideo.addEventListener("error", () => endVideo.classList.remove("is-playing"));
+  endVideo.addEventListener("canplay", () => syncEndVideo(!endScreen.hidden));
+  document.addEventListener("visibilitychange", () => syncEndVideo(!endScreen.hidden));
+  reducedMotion.addEventListener?.("change", () => syncEndVideo(!endScreen.hidden));
+  window.addEventListener("pagehide", () => syncEndVideo(false));
+  window.addEventListener("pageshow", () => syncEndVideo(!endScreen.hidden));
 
   const plannedEvents = (settings) => [...settings.selected, ...settings.custom];
+  const todosScreen = document.querySelector('[data-screen="morning-todos"]');
+  let todosRevealTimer = null;
   const stopStretchTimer = () => {
     if (stretchTicker !== null) window.clearInterval(stretchTicker);
     stretchTicker = null;
   };
   const show = (name) => {
     if (name !== "morning-stretch") stopStretchTimer();
+    if (todosRevealTimer !== null) window.clearTimeout(todosRevealTimer);
+    todosRevealTimer = null;
+    todosScreen.classList.remove("is-entering");
+    const enteringEnd = name === "morning-end" && endScreen.hidden;
     showOnboardingScreen(name);
+    syncEndVideo(name === "morning-end", enteringEnd);
     if (name === "morning-stretch") startStretchTimer();
-    if (name === "morning-todos") renderTodos(plannedEvents(savedSettings || defaultSettings()));
+    if (name === "morning-todos") {
+      savedSettings = readSavedSettings() || savedSettings;
+      const events = plannedEvents(savedSettings || defaultSettings());
+      renderTodos(events);
+      if (!reducedMotion.matches) {
+        const visibleCards = Math.min(events.length, 3);
+        const petDelay = 320 + visibleCards * 140;
+        const footerDelay = petDelay + 130;
+        const buttonDelay = footerDelay + 100;
+        todosScreen.style.setProperty("--todo-pet-delay", String(petDelay) + "ms");
+        todosScreen.style.setProperty("--todo-footer-delay", String(footerDelay) + "ms");
+        todosScreen.style.setProperty("--todo-button-delay", String(buttonDelay) + "ms");
+        void todosScreen.offsetWidth;
+        todosScreen.classList.add("is-entering");
+        todosRevealTimer = window.setTimeout(() => {
+          todosScreen.classList.remove("is-entering");
+          todosRevealTimer = null;
+        }, buttonDelay + 550);
+      }
+    }
   };
-  const continueAfterStretch = () => {
-    const events = savedSettings ? plannedEvents(savedSettings) : [];
-    if (events.length) show("morning-todos");
-    else show("morning-end");
-  };
-  const continueAfterDrink = () => {
-    if (savedSettings && savedSettings.gentle.stretch === false) continueAfterStretch();
-    else show("morning-stretch");
-  };
+  const continueAfterStretch = () => show("morning-todos");
+  const continueAfterDrink = () => show("morning-stretch");
 
   byId("wakeContinue").addEventListener("click", () => show("morning-rating"));
   byId("ratingDone").addEventListener("click", () => {
     try { localStorage.setItem(RATING_KEY, byId("morningRating").value); } catch {}
-    if (savedSettings && savedSettings.gentle.water === false) continueAfterDrink();
-    else show("morning-drink");
+    show("morning-drink");
   });
   const ratingControl = byId("morningRating");
   const ratingBubble = byId("ratingBubble");
   const bubbleLightByRating = [
-    [.12, .22, .78, .04], [.24, .38, .72, .12], [.36, .54, .66, .20], [.48, .70, .60, .28], [.60, .88, .54, .38]
+    [.6, .02], [.47, .07], [.33, .13], [.18, .2], [.04, .28]
   ];
   const renderRating = () => {
     const index = Number(ratingControl.value);
     byId("ratingCurrent").textContent = ratingNames[index];
-    const [veil, prism, lower, shine] = bubbleLightByRating[index];
-    ratingBubble.style.setProperty("--bubble-veil", String(veil));
-    ratingBubble.style.setProperty("--bubble-prism", String(prism));
-    ratingBubble.style.setProperty("--bubble-lower", String(lower));
-    ratingBubble.style.setProperty("--bubble-shine", String(shine));
+    const [shade, light] = bubbleLightByRating[index];
+    ratingBubble.style.setProperty("--bubble-shade", String(shade));
+    ratingBubble.style.setProperty("--bubble-light", String(light));
+    ratingBubble.querySelectorAll("[data-min-rating]").forEach((effect) => {
+      effect.style.opacity = index >= Number(effect.dataset.minRating) ? "1" : "0";
+    });
     byId("ratingThumb").style.left = String(56 + index * 73 - 21) + "px";
     ratingControl.setAttribute("aria-valuetext", ratingNames[index]);
   };
@@ -124,9 +202,10 @@
   const renderTodos = (events) => {
     const list = byId("morningTodoList");
     list.replaceChildren();
-    events.forEach((eventText) => {
+    events.forEach((eventText, index) => {
       const item = document.createElement("div");
       item.className = "morning-todo-item";
+      item.style.setProperty("--todo-delay", String(280 + index * 140) + "ms");
       const marker = document.createElement("img");
       marker.className = "morning-todo-marker";
       marker.src = "./assets/flow/todos-marker.svg";
@@ -146,43 +225,130 @@
       item.append(marker, card);
       list.append(item);
     });
+    list.scrollTop = 0;
   };
+  window.addEventListener("storage", (event) => {
+    if (event.key !== SETTINGS_KEY) return;
+    savedSettings = readSavedSettings();
+    if (!document.querySelector('[data-screen="morning-todos"]').hidden) {
+      renderTodos(plannedEvents(savedSettings || defaultSettings()));
+    }
+  });
   byId("todosDone").addEventListener("click", () => {
     try { localStorage.setItem("sleepet-notify-later-v1", String(byId("morningNotifyLater").checked)); } catch {}
     show("morning-end");
   });
 
+  const endSwipe = byId("endSwipe");
+  const endCircle = byId("morningCircleTransition");
+  let endGesture = null;
+  let endCircleOrigin = { x: 201, y: 790 };
+  const setEndCircleRadius = (radius) => endCircle.style.setProperty("--circle-radius", radius + "px");
+  const setEndCircleOrigin = (x, y) => {
+    endCircleOrigin = { x, y };
+    endCircle.style.setProperty("--circle-x", x + "px");
+    endCircle.style.setProperty("--circle-y", y + "px");
+  };
+  const resetEndCircle = () => {
+    endCircle.classList.remove("is-active", "is-dragging", "is-covering", "is-revealing");
+    setEndCircleRadius(0);
+  };
+  const cancelEndCircle = () => {
+    endCircle.classList.remove("is-dragging", "is-covering");
+    void endCircle.offsetWidth;
+    setEndCircleRadius(0);
+    endCircle.classList.remove("is-active");
+  };
+  const setDefaultEndCircleOrigin = () => {
+    const screenBox = endScreen.getBoundingClientRect();
+    const swipeBox = endSwipe.getBoundingClientRect();
+    setEndCircleOrigin(
+      (swipeBox.left + swipeBox.width / 2 - screenBox.left) * endScreen.clientWidth / screenBox.width,
+      (swipeBox.top + swipeBox.height / 2 - screenBox.top) * endScreen.clientHeight / screenBox.height
+    );
+  };
   const goHomeFromEnd = () => {
     if (leavingEnd) return;
     leavingEnd = true;
-    const white = byId("morningWhiteTransition");
-    white.classList.add("is-visible");
+    if (reducedMotion.matches) {
+      resetEndCircle();
+      show("home");
+      leavingEnd = false;
+      return;
+    }
+    if (!endCircle.classList.contains("is-active")) {
+      setDefaultEndCircleOrigin();
+      setEndCircleRadius(24);
+      endCircle.classList.add("is-active");
+    }
+    endCircle.classList.remove("is-dragging", "is-revealing");
+    endCircle.classList.add("is-covering");
+    const { x, y } = endCircleOrigin;
+    const farthestCorner = Math.max(
+      Math.hypot(x, y),
+      Math.hypot(endScreen.clientWidth - x, y),
+      Math.hypot(x, endScreen.clientHeight - y),
+      Math.hypot(endScreen.clientWidth - x, endScreen.clientHeight - y)
+    );
+    void endCircle.offsetWidth;
+    window.requestAnimationFrame(() => setEndCircleRadius(farthestCorner / .7 + 24));
     window.setTimeout(() => {
       show("home");
-      white.classList.remove("is-visible");
-      window.setTimeout(() => { leavingEnd = false; }, 370);
-    }, 350);
+      endCircle.classList.add("is-revealing");
+      window.setTimeout(() => {
+        resetEndCircle();
+        leavingEnd = false;
+      }, 560);
+    }, 580);
   };
-  const endScreen = document.querySelector('[data-screen="morning-end"]');
-  let endStartY = null;
-  endScreen.addEventListener("pointerdown", (event) => { endStartY = event.clientY; });
-  endScreen.addEventListener("pointerup", (event) => {
-    if (endStartY !== null && endStartY - event.clientY >= 60) goHomeFromEnd();
-    endStartY = null;
+  endScreen.addEventListener("pointerdown", (event) => {
+    if (leavingEnd || !event.isPrimary || (event.pointerType === "mouse" && event.button !== 0)) return;
+    const box = endScreen.getBoundingClientRect();
+    const scaleX = endScreen.clientWidth / box.width;
+    const scaleY = endScreen.clientHeight / box.height;
+    endGesture = {
+      pointerId: event.pointerId,
+      startY: event.clientY,
+      scaleY,
+      distance: 0,
+      startedOnHint: Boolean(event.target.closest("#endSwipe"))
+    };
+    setEndCircleOrigin(
+      Math.max(0, Math.min(endScreen.clientWidth, (event.clientX - box.left) * scaleX)),
+      Math.max(0, Math.min(endScreen.clientHeight, (event.clientY - box.top) * scaleY))
+    );
+    endCircle.classList.remove("is-covering", "is-revealing");
+    endCircle.classList.add("is-active", "is-dragging");
+    setEndCircleRadius(20);
+    try { endScreen.setPointerCapture(event.pointerId); } catch {}
   });
-  endScreen.addEventListener("pointercancel", () => { endStartY = null; });
-  byId("endSwipe").addEventListener("click", goHomeFromEnd);
-  byId("endSwipe").addEventListener("keydown", (event) => {
+  endScreen.addEventListener("pointermove", (event) => {
+    if (!endGesture || endGesture.pointerId !== event.pointerId) return;
+    endGesture.distance = Math.max(0, (endGesture.startY - event.clientY) * endGesture.scaleY);
+    setEndCircleRadius(20 + Math.min(endGesture.distance / 240, 1) * 460);
+  });
+  endScreen.addEventListener("pointerup", (event) => {
+    if (!endGesture || endGesture.pointerId !== event.pointerId) return;
+    const distance = Math.max(0, (endGesture.startY - event.clientY) * endGesture.scaleY);
+    const startedOnHint = endGesture.startedOnHint;
+    endGesture = null;
+    if (endScreen.hasPointerCapture(event.pointerId)) endScreen.releasePointerCapture(event.pointerId);
+    if (distance >= 60 || (startedOnHint && distance < 12)) goHomeFromEnd();
+    else cancelEndCircle();
+  });
+  endScreen.addEventListener("pointercancel", () => { endGesture = null; if (!leavingEnd) cancelEndCircle(); });
+  endSwipe.addEventListener("click", goHomeFromEnd);
+  endSwipe.addEventListener("keydown", (event) => {
     if (event.key === "ArrowUp") { goHomeFromEnd(); event.preventDefault(); }
   });
-
   const renderSettingSuggestions = () => {
     document.querySelectorAll("#settingSuggestions [data-suggestion]").forEach((button) => {
       button.setAttribute("aria-pressed", String(draftSettings.selected.includes(button.dataset.suggestion)));
     });
   };
-  const renderSettingEvents = () => {
+  const renderSettingEvents = (scrollToEnd = false) => {
     const list = byId("settingEventList");
+    const previousScrollTop = list.scrollTop;
     list.replaceChildren();
     plannedEvents(draftSettings).forEach((eventText) => {
       const row = document.createElement("div");
@@ -205,6 +371,7 @@
       row.append(label, remove);
       list.append(row);
     });
+    list.scrollTop = scrollToEnd ? list.scrollHeight : previousScrollTop;
   };
   const calendar = byId("settingCalendar");
   const calendarButton = byId("settingDateButton");
@@ -288,6 +455,8 @@
     document.querySelectorAll("[data-gentle]").forEach((input) => { input.checked = !!draftSettings.gentle[input.dataset.gentle]; });
     renderSettingSuggestions();
     renderSettingEvents();
+    byId("settingEventList").scrollTop = 0;
+    byId("settingAddInput").value = "";
     byId("settingDateText").textContent = draftSettings.date.replaceAll("-", "/");
     calendarView = parseCalendarDate(draftSettings.date);
     closeCalendar();
@@ -305,18 +474,19 @@
   byId("changeRoutine").addEventListener("click", () => document.querySelector('[data-gentle="water"]').focus());
   document.querySelectorAll("#settingSuggestions [data-suggestion]").forEach((button) => button.addEventListener("click", () => {
     const value = button.dataset.suggestion;
-    draftSettings.selected = draftSettings.selected.includes(value)
+    const wasSelected = draftSettings.selected.includes(value);
+    draftSettings.selected = wasSelected
       ? draftSettings.selected.filter((item) => item !== value)
       : [...draftSettings.selected, value];
     renderSettingSuggestions();
-    renderSettingEvents();
+    renderSettingEvents(!wasSelected);
   }));
   const addEvent = () => {
     const value = byId("settingAddInput").value.trim();
     if (!value) { byId("settingAddInput").focus(); return; }
     if (!plannedEvents(draftSettings).some((item) => item.toLowerCase() === value.toLowerCase())) draftSettings.custom.push(value);
     byId("settingAddInput").value = "";
-    renderSettingEvents();
+    renderSettingEvents(true);
   };
   byId("settingAddButton").addEventListener("click", addEvent);
   byId("settingAddInput").addEventListener("keydown", (event) => {
@@ -333,8 +503,6 @@
   const preview = new URLSearchParams(window.location.search).get("preview");
   if (preview === "morning-setting") openSetting();
   else if (preview === "morning-stretch") show("morning-stretch");
-  else if (preview === "morning-todos") {
-    renderTodos(["Go grocery shopping", "Group meeting", "Email the professor about the thesis"]);
-    showOnboardingScreen("morning-todos");
-  } else if (["morning-rating", "morning-drink", "morning-end"].includes(preview)) show(preview);
+  else if (["morning-todos", "morning-rating", "morning-drink", "morning-end"].includes(preview)) show(preview);
+  syncDrinkVideo();
 })();

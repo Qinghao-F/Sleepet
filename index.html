@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sleepet Onboarding + Preferences Demo</title>
-    <link rel="stylesheet" href="./styles.css" />
-    <link rel="stylesheet" href="./onboarding-interactions.css" />
+    <link rel="stylesheet" href="./styles.css?v=home-routine-pill-color-2" />
+    <link rel="stylesheet" href="./onboarding-interactions.css?v=home-night-particles" />
     <link rel="stylesheet" href="./preferences-overrides.css" />
-    <link rel="stylesheet" href="./flow.css" />
-    <link rel="stylesheet" href="./morning.css" />
+    <link rel="stylesheet" href="./flow.css?v=wake-medium-video-fit" />
+    <link rel="stylesheet" href="./morning.css?v=stretch-mocha-video" />
   </head>
   <body>
     <main class="demo-shell">
@@ -103,20 +103,12 @@
           </section>
 
           <section class="onboarding-screen home-screen" data-screen="home" aria-labelledby="homeGreeting" hidden>
+            <img class="home-landscape" src="./assets/onboarding/raw/home-raw-01.png" alt="" aria-hidden="true" draggable="false" />
             <div class="home-status-bar"><span>9:41</span><span class="home-status-icons"><span class="home-signal"></span><span class="home-wifi"></span><span class="home-battery"></span></span></div>
             <p class="home-greeting" id="homeGreeting">Good evening, Sally.</p>
             <button class="routine-pill" id="routineButton" type="button"><img class="routine-icon" src="./assets/onboarding/raw/home-raw-04.png" alt="" /><span>Tomorrow’s morning routine</span><span class="routine-arrows" aria-hidden="true"><img src="./assets/onboarding/raw/home-raw-10.png" alt="" /></span></button>
-            <div class="home-message">Take it slow tonight,<br />I’m here.</div>
-            <button class="home-pet-art" id="homePetArt" type="button" aria-label="Pet Mocha">
-              <span class="home-pet-pose home-pet-pose-default" aria-hidden="true">
-                <img class="home-pet-body" src="./assets/onboarding/mocha-sitting.png" alt="" />
-                <span class="home-pet-head"><img class="home-pet-face" src="./assets/onboarding/mocha-sitting.png" alt="" /></span>
-              </span>
-              <span class="home-pet-pose home-pet-pose-happy" aria-hidden="true">
-                <img class="home-pet-body" src="./assets/onboarding/mocha-happy.png" alt="" />
-                <span class="home-pet-head"><img class="home-pet-face" src="./assets/onboarding/mocha-happy.png" alt="" /></span>
-              </span>
-            </button>
+            <div class="home-message" id="homeMessage" aria-live="polite" aria-atomic="true"><span class="home-message-text" id="homeMessageText">Take it slow tonight,<br />I&#8217;m here..</span></div>
+            <button class="home-pet-art" id="homePetArt" type="button" aria-label="Hear another message from Mocha"><img src="./assets/onboarding/mocha-slow-head-sway.gif" alt="" draggable="false" /></button>
             <p class="home-pet-hint">Tap <span id="homePetName">Mocha</span> to interact</p>
             <button class="home-primary" id="startSleepButton" type="button">Ready to sleep with <span id="homeReadyName">Mocha</span></button>
             <button class="home-secondary" type="button">Meet <span id="homeMeetName">Mocha</span> in AR</button>
@@ -125,6 +117,7 @@
               <button class="home-nav-button" type="button" aria-label="Sleep"><img src="./assets/nav-sleep.svg" alt="" /></button>
               <button class="home-nav-button" id="homeProfileButton" type="button" aria-label="Me"><img src="./assets/nav-me.svg" alt="" /></button>
             </nav>
+            <canvas class="home-foreground" id="homeForeground" aria-hidden="true"></canvas>
           </section>
 
           <section class="onboarding-screen sleep-monitor-screen" data-screen="sleep-monitor" aria-labelledby="sleepMonitorTime" hidden>
@@ -147,15 +140,12 @@
           </section>
 
           <section class="onboarding-screen wake-medium-screen" data-screen="wake-medium" aria-labelledby="wakeMediumTitle" hidden>
-            <img class="wake-landscape" src="./assets/flow/wake-landscape.png" alt="" />
-            <div class="wake-landscape-motion" aria-hidden="true">
-              <span class="wake-cloud-drift"></span><span class="wake-tree-sway wake-tree-sway-upper"></span><span class="wake-tree-sway wake-tree-sway-shore"></span><span class="wake-forest-mist"></span><span class="wake-lake-flow wake-lake-flow-near"></span><span class="wake-lake-flow wake-lake-flow-far"></span><span class="wake-lake-sheen"></span><span class="wake-water-glow"></span><span class="wake-water-ripples wake-water-ripples-back"></span><span class="wake-water-ripples wake-water-ripples-front"></span><span class="wake-foreground wake-foreground-left"></span><span class="wake-foreground wake-foreground-right"></span><span class="wake-birds-cover"></span>
-              <svg class="wake-bird wake-bird-one" viewBox="0 0 32 18" focusable="false"><path d="M2 10 Q9 1 16 10 Q23 1 30 10" /></svg><svg class="wake-bird wake-bird-two" viewBox="0 0 32 18" focusable="false"><path d="M2 10 Q9 1 16 10 Q23 1 30 10" /></svg>
-            </div>
+            <video class="wake-scene-video" id="wakeSceneVideo" autoplay muted loop playsinline preload="auto" poster="./assets/flow/wake-medium-poster.jpg" aria-hidden="true">
+              <source src="./assets/flow/wake-medium-video.mp4" type="video/mp4" />
+            </video>
             <p class="wake-eyebrow">MORNING FEEDBACK</p>
             <h1 id="wakeMediumTitle">Last night had a few<br />restless moments.</h1>
             <p class="wake-reassurance">Let’s find our rhythm together.</p>
-            <img class="wake-pet" src="./assets/flow/wake-mocha.png" alt="" />
             <button class="wake-primary" id="wakeContinue" type="button">Wake up</button>
             <button class="wake-data-link" id="wakeSleepData" type="button">Check last night’s sleep data</button>
           </section>
@@ -163,7 +153,33 @@
           <section class="onboarding-screen morning-screen morning-rating-screen" data-screen="morning-rating" aria-labelledby="morningRatingTitle" hidden>
             <img class="morning-bg rating-bg" src="./assets/flow/rating-background.png" alt="" />
             <h1 class="rating-question" id="morningRatingTitle">How do you feel this morning?</h1><p class="rating-subtitle">Take a moment to record how rested you feel.</p>
-            <div class="rating-bubble morning-bubble" id="ratingBubble" aria-hidden="true"><span class="rating-bubble-rainbow"></span><span class="rating-bubble-lower"></span><img class="rating-bubble-outline" src="./assets/flow/rating-bubble.svg" alt="" /></div>
+            <div class="rating-bubble morning-bubble" id="ratingBubble" aria-hidden="true">
+              <img class="rating-bubble-art" src="./assets/flow/rating-glass-bubble.png" alt="" />
+              <span class="rating-bubble-shade"></span><span class="rating-bubble-light"></span>
+              <svg class="rating-bubble-effects" viewBox="0 0 240 240" aria-hidden="true" focusable="false">
+                <defs>
+                  <linearGradient id="ratingLightBand" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff8db" stop-opacity="0" /><stop offset=".25" stop-color="#ffdfa0" stop-opacity=".7" /><stop offset=".65" stop-color="#fff1c5" stop-opacity=".95" /><stop offset="1" stop-color="#fff7df" stop-opacity="0" /></linearGradient>
+                  <radialGradient id="ratingLightPoint"><stop offset="0" stop-color="#fffdf0" stop-opacity=".95" /><stop offset=".22" stop-color="#fff1c7" stop-opacity=".6" /><stop offset="1" stop-color="#ffe3b0" stop-opacity="0" /></radialGradient>
+                  <filter id="ratingBandBlur" x="-30%" y="-100%" width="160%" height="300%"><feGaussianBlur stdDeviation="4" /></filter>
+                </defs>
+                <g class="rating-light-band" data-min-rating="1"><path d="M4 129 C44 103 71 106 101 132 S165 164 236 111" filter="url(#ratingBandBlur)" /><path d="M4 129 C44 103 71 106 101 132 S165 164 236 111" /></g>
+                <g class="rating-light-band" data-min-rating="2"><path d="M-8 165 C33 191 75 165 112 145 S181 92 247 134" filter="url(#ratingBandBlur)" /><path d="M-8 165 C33 191 75 165 112 145 S181 92 247 134" /></g>
+                <g class="rating-light-band" data-min-rating="3"><path d="M-7 93 C53 69 80 80 116 111 S174 149 247 81" filter="url(#ratingBandBlur)" /><path d="M-7 93 C53 69 80 80 116 111 S174 149 247 81" /></g>
+                <g class="rating-light-band" data-min-rating="4"><path d="M-8 202 C56 169 91 198 139 172 S210 157 252 188" filter="url(#ratingBandBlur)" /><path d="M-8 202 C56 169 91 198 139 172 S210 157 252 188" /></g>
+                <g class="rating-light-point" data-min-rating="0" transform="translate(88 105)"><circle r="11" /><circle class="rating-point-core" r="1.6" /></g>
+                <g class="rating-light-point" data-min-rating="1" transform="translate(44 125)"><circle r="10" /><circle class="rating-point-core" r="1.8" /></g>
+                <g class="rating-light-point" data-min-rating="1" transform="translate(163 146)"><circle r="12" /><circle class="rating-point-core" r="2" /></g>
+                <g class="rating-light-point" data-min-rating="2" transform="translate(116 135)"><circle r="9" /><circle class="rating-point-core" r="1.7" /></g>
+                <g class="rating-light-point" data-min-rating="2" transform="translate(194 111)"><circle r="13" /><circle class="rating-point-core" r="2.1" /></g>
+                <g class="rating-light-point" data-min-rating="3" transform="translate(66 83)"><circle r="10" /><circle class="rating-point-core" r="1.6" /></g>
+                <g class="rating-light-point" data-min-rating="3" transform="translate(143 88)"><circle r="8" /><circle class="rating-point-core" r="1.4" /></g>
+                <g class="rating-light-point" data-min-rating="3" transform="translate(174 177)"><circle r="11" /><circle class="rating-point-core" r="1.9" /></g>
+                <g class="rating-light-point" data-min-rating="4" transform="translate(99 185)"><circle r="12" /><circle class="rating-point-core" r="1.8" /></g>
+                <g class="rating-light-point" data-min-rating="4" transform="translate(214 153)"><circle r="9" /><circle class="rating-point-core" r="1.5" /></g>
+                <g class="rating-light-point" data-min-rating="4" transform="translate(37 176)"><circle r="11" /><circle class="rating-point-core" r="1.8" /></g>
+                <g class="rating-light-point" data-min-rating="4" transform="translate(208 74)"><circle r="8" /><circle class="rating-point-core" r="1.4" /></g>
+              </svg>
+            </div>
             <p class="rating-current" id="ratingCurrent">Refreshed</p>
             <div class="rating-slider-wrap"><span class="rating-slider-base"></span><img class="rating-slider-dots" src="./assets/flow/rating-slider-dots.svg" alt="" /><span class="rating-slider-thumb" id="ratingThumb"></span><input id="morningRating" type="range" min="0" max="4" step="1" value="3" aria-label="How rested do you feel?" /></div>
             <span class="rating-low">Exhausted</span><span class="rating-high">Energetic</span><button class="morning-action rating-done" id="ratingDone" type="button">Done</button>
@@ -173,38 +189,80 @@
             <img class="morning-bg routine-blurred-bg drink-bg" src="./assets/flow/drink-background.png" alt="" /><p class="morning-step-heading">Morning routine.</p><div class="morning-step-progress" aria-hidden="true"><span class="is-current"></span><span></span><span></span></div>
             <img class="drink-bubble morning-bubble" src="./assets/flow/drink-bubble.svg" alt="" /><div class="drink-glass-crop"><img src="./assets/flow/drink-glass.png" alt="" /></div>
             <span class="drink-glass-shine drink-glass-shine-a"></span><span class="drink-glass-shine drink-glass-shine-b"></span><span class="drink-glass-shine drink-glass-shine-c"></span><span class="drink-glass-shine drink-glass-shine-d"></span><span class="drink-glass-shine drink-glass-shine-e"></span><span class="drink-glass-shine drink-glass-shine-f"></span>
-            <h1 class="morning-routine-label" id="morningDrinkTitle">Drink a glass of water</h1><img class="drink-dog-under" src="./assets/flow/drink-pet-overlay.png" alt="" /><div class="drink-dog-crop"><img src="./assets/flow/drink-pet.png" alt="" /></div>
+            <h1 class="morning-routine-label" id="morningDrinkTitle">Drink a glass of water</h1>
+            <video class="drink-dog-video" id="drinkMochaVideo" autoplay muted loop playsinline preload="auto" poster="./assets/flow/drink-mocha-poster.png" aria-hidden="true">
+              <source src="./assets/flow/drink-mocha-animated.webm" type="video/webm" />
+            </video>
             <button class="morning-action" id="drinkDone" type="button">Done</button><button class="morning-skip" id="drinkSkip" type="button">Skip for now</button>
           </section>
 
           <section class="onboarding-screen morning-screen morning-stretch-screen" data-screen="morning-stretch" aria-labelledby="morningStretchTitle" hidden>
             <img class="morning-bg routine-blurred-bg stretch-bg" src="./assets/flow/stretch-background.png" alt="" /><p class="morning-step-heading">Morning routine.</p><div class="morning-step-progress" aria-hidden="true"><span></span><span class="is-current"></span><span></span></div>
             <img class="stretch-bubble" src="./assets/flow/stretch-bubble.svg" alt="" /><img class="stretch-ring-base" src="./assets/flow/stretch-ring-base.svg" alt="" /><img class="stretch-ring-progress" id="stretchRingProgress" src="./assets/flow/stretch-ring-progress.svg" alt="" /><img class="stretch-ring-dot" id="stretchRingDot" src="./assets/flow/stretch-ring-dot.svg" alt="" />
-            <p class="stretch-time" id="stretchTime" role="timer">05:00</p><p class="stretch-time-label" id="stretchTimeLabel">STRETCH TIME</p><h1 class="morning-routine-label" id="morningStretchTitle">Stretch for 5 minutes</h1><div class="stretch-dog-crop"><img src="./assets/flow/stretch-pet.png" alt="" /></div>
+            <p class="stretch-time" id="stretchTime" role="timer">05:00</p><p class="stretch-time-label" id="stretchTimeLabel">STRETCH TIME</p><h1 class="morning-routine-label" id="morningStretchTitle">Stretch for 5 minutes</h1>
+            <div class="stretch-dog-crop" id="stretchDogFallback"><img src="./assets/flow/stretch-pet.png" alt="" /></div>
+            <canvas class="stretch-dog-canvas" id="stretchMochaCanvas" width="456" height="340" role="img" aria-label="Mocha stretching"></canvas>
+            <video class="stretch-video-source" id="stretchMochaVideo" muted loop playsinline preload="auto" src="./assets/flow/stretch-mocha-video.mp4" aria-hidden="true"></video>
             <button class="morning-action" id="stretchDone" type="button" disabled>Done</button><button class="morning-skip" id="stretchSkip" type="button">Skip for now</button>
           </section>
 
           <section class="onboarding-screen morning-screen morning-todos-screen" data-screen="morning-todos" aria-labelledby="morningTodosTitle" hidden>
-            <img class="morning-bg routine-blurred-bg todos-bg" src="./assets/flow/todos-background.png" alt="" /><p class="morning-step-heading">Morning routine.</p><div class="morning-step-progress" aria-hidden="true"><span></span><span></span><span class="is-current"></span></div>
-            <h1 id="morningTodosTitle">Don’t forget to...</h1><div class="morning-todo-timeline" aria-hidden="true"></div><div class="morning-todo-list" id="morningTodoList"></div><img class="morning-todos-pet" src="./assets/flow/todos-pet.png" alt="" />
-            <label class="morning-notification-choice"><input id="morningNotifyLater" type="checkbox" /><img src="./assets/flow/todos-radio.svg" alt="" /><span>Send me notifications later</span></label><button class="morning-action todos-done" id="todosDone" type="button">Thanks for reminding</button>
+            <img class="morning-bg routine-blurred-bg todos-bg" src="./assets/flow/todos-background.png" alt="" />
+            <p class="morning-step-heading">Morning routine.</p>
+            <div class="morning-step-progress" aria-hidden="true"><span></span><span></span><span class="is-current"></span></div>
+            <h1 id="morningTodosTitle">Don’t forget to...</h1>
+            <div class="morning-todo-timeline" aria-hidden="true"></div>
+            <div class="morning-todo-list" id="morningTodoList" tabindex="0" aria-label="Morning to-dos"></div>
+            <img class="morning-todos-pet" src="./assets/flow/todos-pet.png" alt="" />
+            <label class="morning-notification-choice"><input id="morningNotifyLater" type="checkbox" /><img src="./assets/flow/todos-radio.svg" alt="" /><span>Send me notifications later</span></label>
+            <button class="morning-action todos-done" id="todosDone" type="button">Thanks for reminding</button>
           </section>
 
           <section class="onboarding-screen morning-screen morning-end-screen" data-screen="morning-end" aria-labelledby="morningEndTitle" hidden>
-            <img class="end-landscape" src="./assets/flow/end-background.png" alt="" /><div class="end-landscape-motion" aria-hidden="true"><span class="end-foliage-sway"></span><span class="end-lake-flow"></span><span class="end-ducks-cover"></span><span class="end-ducks-drift"></span><span class="end-birds-cover"></span><svg class="end-bird end-bird-a" viewBox="0 0 32 18" focusable="false"><path d="M2 10 Q9 1 16 10 Q23 1 30 10" /></svg><svg class="end-bird end-bird-b" viewBox="0 0 32 18" focusable="false"><path d="M2 10 Q9 1 16 10 Q23 1 30 10" /></svg></div>
-            <img class="end-bubble morning-bubble" src="./assets/flow/end-bubble.svg" alt="" /><h1 id="morningEndTitle">Let’s ease into the day.</h1><p class="end-reassurance">Mocha will be here whenever<br />you feel like talking.</p><button class="end-swipe" id="endSwipe" type="button" aria-label="Swipe up to return Home"><span class="end-up-arrows" aria-hidden="true">⌃<br />⌃</span><span>Swipe up to continue</span></button>
+            <img class="end-landscape" src="./assets/flow/end-background.png" alt="" />
+            <video class="end-landscape-video" id="endLandscapeVideo" muted playsinline preload="auto" poster="./assets/flow/end-background.png" src="./assets/flow/end-landscape.mp4" aria-hidden="true"></video>
+            <img class="end-bubble morning-bubble" src="./assets/flow/end-bubble.svg" alt="" />
+            <h1 id="morningEndTitle">Let’s ease into the day.</h1>
+            <p class="end-reassurance">Mocha will be here whenever<br />you feel like talking.</p>
+            <button class="end-swipe" id="endSwipe" type="button" aria-label="Swipe up to return Home">
+              <span class="end-up-arrows" aria-hidden="true">⌃<br />⌃</span><span>Swipe up to continue</span>
+            </button>
           </section>
 
           <section class="onboarding-screen morning-setting-screen" data-screen="morning-setting" aria-labelledby="morningSettingTitle" hidden>
-            <div class="flow-status-bar" aria-hidden="true"><span>9:41</span><span class="home-status-icons"><span class="home-signal"></span><span class="home-wifi"></span><span class="home-battery"></span></span></div><button class="morning-setting-back" id="morningSettingBack" type="button" aria-label="Back to Home">‹</button>
-            <h1 id="morningSettingTitle">Tomorrow’s Todo...</h1><p class="morning-setting-subtitle">Keep it light. You can change anything.</p>
-            <section class="gentle-start-card" aria-label="Gentle start"><h2>Gentle start</h2><label><input type="checkbox" data-gentle="water" checked /><span>Drink a glass of water</span></label><label><input type="checkbox" data-gentle="stretch" checked /><span>Stretch · 5min</span></label><label><input type="checkbox" data-gentle="breakfast" /><span>Make breakfast</span></label><img class="gentle-divider" src="./assets/flow/setting-divider.svg" alt="" /><button id="changeRoutine" class="change-routine" type="button">change routine</button></section>
-            <h2 class="setting-day-question">How would you like to spend<br />your day tomorrow?</h2><div class="setting-suggestions" id="settingSuggestions"><button type="button" data-suggestion="Go grocery shopping" aria-pressed="true">Go grocery shopping</button><button type="button" data-suggestion="Group meeting" aria-pressed="true">Group meeting</button><button type="button" data-suggestion="Call dad to celebrate his birthday" aria-pressed="false">Call dad to celebrate his birthday</button><button type="button" data-suggestion="Gym day" aria-pressed="false">Gym day</button></div>
-            <section class="setting-events-card" aria-label="Tomorrow's events"><div class="setting-date-row"><button id="settingDateButton" type="button" aria-label="Choose a date for tomorrow's events" aria-haspopup="dialog" aria-expanded="false"><span id="settingDateText">2026/09/08</span><img src="./assets/flow/setting-calendar.svg" alt="" /></button></div><div class="setting-event-list" id="settingEventList"></div><div class="setting-add-row"><button id="settingAddButton" type="button" aria-label="Add event"><img src="./assets/flow/setting-plus.svg" alt="" /></button><input id="settingAddInput" type="text" maxlength="60" placeholder="Add a short event" aria-label="Add a short event" /></div></section>
-            <div class="setting-calendar" id="settingCalendar" role="dialog" aria-label="Choose event date" hidden><div class="setting-calendar-header"><button id="settingCalendarPrev" type="button" aria-label="Previous month">‹</button><strong id="settingCalendarMonth"></strong><button id="settingCalendarNext" type="button" aria-label="Next month">›</button></div><div class="setting-calendar-weekdays" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div><div class="setting-calendar-days" id="settingCalendarDays"></div><div class="setting-calendar-actions"><button id="settingCalendarToday" type="button">Today</button><button id="settingCalendarClose" type="button">Close</button></div></div>
+            <div class="flow-status-bar" aria-hidden="true"><span>9:41</span><span class="home-status-icons"><span class="home-signal"></span><span class="home-wifi"></span><span class="home-battery"></span></span></div>
+            <button class="morning-setting-back" id="morningSettingBack" type="button" aria-label="Back to Home">‹</button>
+            <h1 id="morningSettingTitle">Tomorrow’s Todo...</h1>
+            <p class="morning-setting-subtitle">Keep it light. You can change anything.</p>
+            <section class="gentle-start-card" aria-label="Gentle start">
+              <h2>Gentle start</h2>
+              <label><input type="checkbox" data-gentle="water" checked /><span>Drink a glass of water</span></label>
+              <label><input type="checkbox" data-gentle="stretch" checked /><span>Stretch · 5min</span></label>
+              <label><input type="checkbox" data-gentle="breakfast" /><span>Make breakfast</span></label>
+              <img class="gentle-divider" src="./assets/flow/setting-divider.svg" alt="" />
+              <button id="changeRoutine" class="change-routine" type="button">change routine</button>
+            </section>
+            <h2 class="setting-day-question">How would you like to spend<br />your day tomorrow?</h2>
+            <div class="setting-suggestions" id="settingSuggestions">
+              <button type="button" data-suggestion="Go grocery shopping" aria-pressed="true">Go grocery shopping</button>
+              <button type="button" data-suggestion="Group meeting" aria-pressed="true">Group meeting</button>
+              <button type="button" data-suggestion="Call dad to celebrate his birthday" aria-pressed="false">Call dad to celebrate his birthday</button>
+              <button type="button" data-suggestion="Gym day" aria-pressed="false">Gym day</button>
+            </div>
+            <section class="setting-events-card" aria-label="Tomorrow's events">
+              <div class="setting-date-row"><button id="settingDateButton" type="button" aria-label="Choose a date for tomorrow's events" aria-haspopup="dialog" aria-expanded="false"><span id="settingDateText">2026/09/08</span><img src="./assets/flow/setting-calendar.svg" alt="" /></button></div>
+              <div class="setting-event-list" id="settingEventList" tabindex="0" aria-label="Planned events"></div>
+              <div class="setting-add-row"><button id="settingAddButton" type="button" aria-label="Add event"><img src="./assets/flow/setting-plus.svg" alt="" /></button><input id="settingAddInput" type="text" maxlength="60" placeholder="Add a short event" aria-label="Add a short event" /></div>
+            </section>
+            <div class="setting-calendar" id="settingCalendar" role="dialog" aria-label="Choose event date" hidden>
+              <div class="setting-calendar-header"><button id="settingCalendarPrev" type="button" aria-label="Previous month">‹</button><strong id="settingCalendarMonth"></strong><button id="settingCalendarNext" type="button" aria-label="Next month">›</button></div>
+              <div class="setting-calendar-weekdays" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+              <div class="setting-calendar-days" id="settingCalendarDays"></div>
+              <div class="setting-calendar-actions"><button id="settingCalendarToday" type="button">Today</button><button id="settingCalendarClose" type="button">Close</button></div>
+            </div>
             <button class="setting-save" id="settingSave" type="button">Save</button>
           </section>
-          <span class="morning-white-transition" id="morningWhiteTransition" aria-hidden="true"></span>
+          <span class="morning-circle-transition" id="morningCircleTransition" aria-hidden="true"></span>
         </section>
 
         <header class="status-bar" aria-label="Status bar">
@@ -362,8 +420,10 @@
         </div>
       </div>
     </main>
-    <script src="./app.js?v=clock-toggle-flow"></script>
-    <script src="./flow.js"></script>
-    <script src="./morning.js"></script>
+    <script src="./app.js?v=morning-flow-stagger"></script>
+    <script src="./flow.js?v=flow-videos-visible"></script>
+    <script src="./morning.js?v=stretch-mocha-video"></script>
+    <script src="./stretch-video.js?v=stretch-mocha-video-clean-2"></script>
+    <script src="./home-foreground.js?v=home-night-particles-more-2"></script>
   </body>
 </html>

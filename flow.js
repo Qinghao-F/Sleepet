@@ -2,6 +2,33 @@
   const sleepScreen = document.querySelector("[data-screen=\"sleep-monitor\"]");
   const wakeScreen = document.querySelector("[data-screen=\"wake-medium\"]");
   if (!sleepScreen || !wakeScreen) return;
+  const wakeVideo = document.getElementById("wakeSceneVideo");
+  wakeVideo.defaultPlaybackRate = 0.75;
+  wakeVideo.playbackRate = 0.75;
+  const onboardingLayer = document.getElementById("onboardingLayer");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let wasOnWakeScreen = false;
+  const syncWakeVideo = () => {
+    const onWakeScreen = !wakeScreen.hidden && !onboardingLayer.classList.contains("is-hidden");
+    if (onWakeScreen && !wasOnWakeScreen) {
+      try { wakeVideo.currentTime = 0; } catch {}
+    }
+    wasOnWakeScreen = onWakeScreen;
+    if (!onWakeScreen || reducedMotion.matches) {
+      wakeVideo.pause();
+      return;
+    }
+    wakeVideo.playbackRate = 0.75;
+    const playback = wakeVideo.play();
+    if (playback?.catch) playback.catch(() => {});
+  };
+  new MutationObserver(syncWakeVideo).observe(wakeScreen, { attributes: true, attributeFilter: ["hidden"] });
+  new MutationObserver(syncWakeVideo).observe(onboardingLayer, { attributes: true, attributeFilter: ["class"] });
+  wakeVideo.addEventListener("canplay", syncWakeVideo);
+  document.addEventListener("visibilitychange", syncWakeVideo);
+  reducedMotion.addEventListener?.("change", syncWakeVideo);
+  window.addEventListener("pagehide", () => wakeVideo.pause());
+  window.addEventListener("pageshow", syncWakeVideo);
   document.getElementById("startSleepButton").addEventListener("click", () => showOnboardingScreen("sleep-monitor"));
 
   const modeToggle = document.getElementById("sleepModeToggle");
@@ -43,21 +70,35 @@
 
   const slide = document.getElementById("sleepSlide");
   const travel = 204;
-  let progress = 0, activePointer = null, startX = 0, startProgress = 0;
+  let progress = 0, activePointer = null, startX = 0, startProgress = 0, slideCompleting = false;
   const setProgress = (value) => {
     progress = Math.min(1, Math.max(0, value));
     slide.style.setProperty("--slide-distance", String(Math.round(progress * travel)) + "px");
+    slide.style.setProperty("--slide-fill-width", String(Math.round(64 + progress * 217)) + "px");
+    slide.style.setProperty("--slide-fill-opacity", String(.05 + progress * .95));
+    slide.style.setProperty("--slide-halo-opacity", String(.22 + progress * .72));
+    slide.style.setProperty("--slide-text-opacity", String(1 - progress));
+    slide.classList.toggle("is-active", progress > .02);
     slide.setAttribute("aria-valuenow", String(Math.round(progress * 100)));
     slide.setAttribute("aria-valuetext", progress >= .82 ? "Release to end sleep" : "Slide right to end sleep");
   };
   const finishSlide = () => {
     if (progress >= .82) {
+      slideCompleting = true;
+      slide.classList.add("is-complete");
       setProgress(1);
-      window.setTimeout(() => { showOnboardingScreen("wake-medium"); window.setTimeout(() => setProgress(0), 300); }, 180);
+      window.setTimeout(() => {
+        showOnboardingScreen("wake-medium");
+        window.setTimeout(() => {
+          setProgress(0);
+          slide.classList.remove("is-complete");
+          slideCompleting = false;
+        }, 300);
+      }, 420);
     } else setProgress(0);
   };
   slide.addEventListener("pointerdown", (event) => {
-    if (event.button !== 0) return;
+    if (slideCompleting || event.button !== 0) return;
     activePointer = event.pointerId; startX = event.clientX; startProgress = progress;
     slide.setPointerCapture(event.pointerId); slide.classList.add("is-dragging"); event.preventDefault();
   });
@@ -72,6 +113,7 @@
   });
   slide.addEventListener("pointercancel", () => { activePointer = null; slide.classList.remove("is-dragging"); setProgress(0); });
   slide.addEventListener("keydown", (event) => {
+    if (slideCompleting) return;
     if (event.key === "ArrowRight") { setProgress(progress + .2); event.preventDefault(); }
     if (event.key === "ArrowLeft") { setProgress(progress - .2); event.preventDefault(); }
     if (event.key === "Home") { setProgress(0); event.preventDefault(); }
@@ -82,4 +124,5 @@
   const preview = new URLSearchParams(window.location.search).get("preview");
   if (preview === "sleep-monitor") showOnboardingScreen("sleep-monitor");
   if (preview === "wake-medium") showOnboardingScreen("wake-medium");
+  syncWakeVideo();
 })();
