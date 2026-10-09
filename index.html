@@ -3,18 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sleepet Onboarding + Preferences Demo</title>
+    <title>Sleepet Interactive Demo</title>
     <link rel="stylesheet" href="./styles.css?v=home-routine-pill-color-2" />
     <link rel="stylesheet" href="./onboarding-interactions.css?v=home-night-particles" />
     <link rel="stylesheet" href="./preferences-overrides.css" />
     <link rel="stylesheet" href="./flow.css?v=wake-medium-video-fit" />
     <link rel="stylesheet" href="./morning.css?v=stretch-mocha-video" />
+    <link rel="stylesheet" href="./reports.css" />
   </head>
   <body>
     <main class="demo-shell">
-      <p class="demo-label">Sleepet · Preferences interactive demo</p>
+      <p class="demo-label">Sleepet · Interactive demo</p>
       <div class="phone" id="phone" aria-label="Sleepet preferences page">
         <section class="onboarding-layer" id="onboardingLayer" aria-label="Sleepet onboarding">
+          <section class="onboarding-screen report-screen" data-screen="reports" aria-label="Sleep reports" hidden></section>
           <section class="onboarding-screen splash-screen is-active" data-screen="splash" aria-label="Sleepet welcome animation">
             <div class="splash-overlay" aria-hidden="true">
               <div class="splash-symbol" data-node-id="264:882"><img src="./assets/onboarding/splash/symbol.svg" alt="" /></div>
@@ -420,10 +422,12 @@
         </div>
       </div>
     </main>
-    <script src="./app.js?v=morning-flow-stagger"></script>
+    <script src="./app.js?v=morning-flow-stagger-reports-1"></script>
     <script src="./flow.js?v=flow-videos-visible"></script>
     <script src="./morning.js?v=stretch-mocha-video"></script>
     <script src="./stretch-video.js?v=stretch-mocha-video-clean-2"></script>
     <script src="./home-foreground.js?v=home-night-particles-more-2"></script>
+    <script src="./report-model.js"></script>
+    <script src="./reports.js"></script>
   </body>
 </html>
