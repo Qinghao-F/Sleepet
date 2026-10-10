@@ -48,6 +48,7 @@ function showOnboardingScreen(name) {
   stagedMorningTimer = null;
   stagedMorningScreen?.classList.remove("is-entering");
   stagedMorningScreen = null;
+  const previousScreen = onboardingState.screen;
   onboardingState.screen = name;
   // Browsers may scroll the clipped phone when an input receives focus.
   // Reset it on every screen change so the 402 × 874 frame stays anchored.
@@ -61,6 +62,7 @@ function showOnboardingScreen(name) {
   });
   onboardingLayer.classList.remove("is-hidden");
   renderOnboarding();
+  window.dispatchEvent(new CustomEvent("sleepet:screenchange", { detail: { name, previousScreen } }));
   if (activeScreen && stagedMorningScreens.has(name) && !window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
     void activeScreen.offsetWidth;
     activeScreen.classList.add("is-entering");
