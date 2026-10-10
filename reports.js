@@ -2,18 +2,18 @@
   'use strict';
   const M = window.SleepetReportModel;
   const screen = document.querySelector('[data-screen="reports"]');
-  const HISTORY = 'sleepet-report-history-v1', PENDING = 'sleepet-report-pending-v1';
   const asset = file => `./assets/reports/${file}`;
   const img = (file, cls = '') => `<img class="${cls}" src="${asset(file)}" alt="" />`;
   const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const today = () => M.shift(new Date(), 0);
-  const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
-  const stored = read(HISTORY, []);
-  let records = Array.isArray(stored) ? stored.filter(M.valid) : [];
-  let pending = read(PENDING, null);
-  let mode = 'weekly', weekEnd = today(), selected = today(), returnFocus = null, returnScreen = null;
-  let persistenceFailed = false;
-  const write = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { persistenceFailed = true; } };
+  // Fixed Figma presentation values, independent of preferences and saved sessions.
+  const referenceDate = () => new Date(2026, 8, 13, 12);
+  const fixedChart = Object.freeze({ heights: Object.freeze([87, 99, 77, 87, 87, 99, 99]), averageOffset: 47.5 });
+  const fixedNight = date => {
+    const start = new Date(date); start.setHours(23, 50, 0, 0);
+    return { startedAt: start.toISOString(), seconds: 490 * 60, deep: 110, light: 260, rem: 120, sample: true };
+  };
+  let mode = 'weekly', weekEnd = referenceDate(), selected = referenceDate(), returnFocus = null, returnScreen = null;
   const dateLabel = date => date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }).toUpperCase();
   const timeLabel = date => date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }).toLowerCase();
   const rangeLabel = end => {
@@ -22,12 +22,6 @@
     const last = first.getMonth() === end.getMonth() && sameYear ? `${end.getDate()}, ${end.getFullYear()}` : end.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
     return `${start} – ${last}`.toUpperCase();
   };
-  const goalMinutes = prefix => {
-    const schedule = state.schedule;
-    let hour = Number(schedule[`${prefix}Hour`]) % 12 + (schedule[`${prefix}Period`] === 'PM' ? 12 : 0);
-    let minutes = hour * 60 + Number(schedule[`${prefix}Minute`]);
-    return minutes < 720 ? minutes + 1440 : minutes;
-  };
   function nav() {
     return `<nav class="report-nav" aria-label="Main navigation"><button type="button" data-action="home" aria-label="Home">${img('d9241.svg')}</button><button type="button" class="active" data-action="weekly" aria-label="Sleep reports" aria-current="page">${img('bd7ac.svg')}</button><button type="button" data-action="me" aria-label="Me">${img('19ec9.svg')}</button></nav>`;
   }
@@ -35,11 +29,11 @@
     const average = summary.averageBedtime === null ? '—' : timeLabel(new Date(2000, 0, 1, 0, summary.averageBedtime % 1440));
     const real = summary.count > summary.sampleCount;
     const bars = summary.days.map(({ date, record }, i) => {
-      const height = record ? Math.max(3, Math.min(105, record.seconds / 60 / 600 * 105)) : 2;
+      const height = fixedChart.heights[i];
       return `<button type="button" class="report-day ${i === 6 ? 'last-day' : ''} ${record ? '' : 'empty-day'}" data-day="${M.key(date)}" aria-label="${escape(dateLabel(date))}: ${record ? M.duration(record.seconds) + (record.sample ? ', demo data' : ', recorded session') : 'no session'}"><span class="report-bar" style="--bar-height:${height}px;--bar-delay:${i * 45}ms"></span><span class="report-day-letter">${date.toLocaleDateString('en-US', { weekday: 'short' }).slice(0, 1)}</span></button>`;
     }).join('');
     return `<article class="report-card routine-card"><h2>Your routine, this week</h2><div class="routine-stats"><div><strong>${summary.sampleCount ? summary.bedGoals : '—'}</strong><span> / 7 nights</span><p>Asleep by your goal.</p></div><div><strong>${summary.sampleCount ? summary.wakeGoals : '—'}</strong><span> / 7 mornings</span><p>Up by your goal.</p></div></div></article>
-      <article class="report-card consistency-card"><h2>Bedtime consistency</h2><p class="average-caption">${real ? 'Average session start' : 'Average bedtime'}</p><strong class="average-time">${average}</strong><div class="report-chart"><div class="report-axis"><span>11pm</span><span>12am</span><span>08am</span><span>09am</span></div><div class="report-plot"><div class="report-grid" aria-hidden="true">${Array.from({ length: 4 }, () => img('13f1b.svg')).join('')}</div><div class="report-bars">${bars}</div>${summary.count ? `<div class="report-average-line" style="top:${M.bedtimeOffset(summary.averageBedtime)}px" aria-hidden="true">${img('66670.svg')}</div>` : ''}</div></div><p class="chart-hint">Tap any day to see your daily sleep report</p></article>
+      <article class="report-card consistency-card"><h2>Bedtime consistency</h2><p class="average-caption">${real ? 'Average session start' : 'Average bedtime'}</p><strong class="average-time">${average}</strong><div class="report-chart"><div class="report-axis"><span>11pm</span><span>12am</span><span>08am</span><span>09am</span></div><div class="report-plot"><div class="report-grid" aria-hidden="true">${Array.from({ length: 4 }, () => img('13f1b.svg')).join('')}</div><div class="report-bars">${bars}</div>${summary.count ? `<div class="report-average-line" style="top:${fixedChart.averageOffset}px" aria-hidden="true">${img('66670.svg')}</div>` : ''}</div></div><p class="chart-hint">Tap any day to see your daily sleep report</p></article>
       <article class="report-card rhythm-card"><h2>Your sleep rhythm</h2><p>Keep using Sleepet everyday.</p><p>${summary.count ? `${M.duration(summary.averageSeconds)} average ${real ? 'session' : 'sleep'}.` : 'No sessions this week.'}</p><button type="button" class="report-health-link" data-action="health">${img('5fb77.svg')}${img('93ca3.svg', 'health-chevron')}<span>Click to see more<br>information</span></button></article>`;
   }
   function dailyContent(record) {
@@ -59,13 +53,16 @@
       <button type="button" class="report-connect" data-action="health"><span>Wonder more detail of sleep?<br>Connect to smart watch now.</span>${img('510a8.svg')}</button>`;
   }
   function render(focusHeading = false) {
-    const summary = M.week(records, weekEnd, goalMinutes('bed'), goalMinutes('wake'));
-    const record = M.forDay(records, selected), weekly = mode === 'weekly';
+    const summary = {
+      days: Array.from({ length: 7 }, (_, i) => { const date = M.shift(weekEnd, i - 6); return { date, record: fixedNight(date) }; }),
+      count: 7, sampleCount: 7, bedGoals: 3, wakeGoals: 4, averageBedtime: 1461, averageSeconds: 465 * 60
+    };
+    const record = fixedNight(selected), weekly = mode === 'weekly';
     const hasDemo = weekly ? summary.sampleCount > 0 : !!record?.sample;
-    const note = hasDemo ? summary.count > summary.sampleCount && weekly ? 'DEMO + SESSION DATA' : 'DEMO DATA' : persistenceFailed ? 'SESSION ONLY · STORAGE UNAVAILABLE' : 'ON THIS DEVICE';
+    const note = 'DEMO DATA';
     const message = weekly ? 'Do you enjoy this week?' : !record ? 'Let’s find your rhythm.' : record.sample && record.seconds >= 480 * 60 ? 'You rested well.' : record.sample ? 'Take it gently today.' : 'A little rest matters.';
     screen.dataset.reportMode = mode;
-    screen.innerHTML = `<div class="report-scroll"><div class="report-toolbar"><button type="button" data-action="${weekly ? 'home' : 'back'}" aria-label="${weekly ? 'Back to Home' : 'Back to weekly report'}">‹ ${weekly ? 'Home' : 'Week'}</button><button type="button" data-action="sample" aria-label="Add seven fixed demo nights">TEST +</button></div><header class="report-header"><p>S L E E P E T</p><h1 tabindex="-1">${weekly ? 'Weekly' : 'Daily'} Report</h1></header><div class="report-companion"><p>${message}</p>${img('565bf.png', 'report-mascot')}</div><div class="report-period"><button type="button" data-action="previous" aria-label="Previous ${weekly ? 'week' : 'day'}">‹</button><button type="button" class="report-period-label" data-action="date" aria-label="Choose report date">${weekly ? rangeLabel(weekEnd) : dateLabel(selected)}</button><button type="button" data-action="next" aria-label="Next ${weekly ? 'week' : 'day'}" ${M.key(weekly ? weekEnd : selected) >= M.key(today()) ? 'disabled' : ''}>›</button></div><div class="report-meta"><span>${weekly ? note : dateLabel(selected)}</span><span>${weekly ? `${summary.count} nights` : hasDemo ? 'Demo night' : M.key(selected) === M.key(today()) ? 'Today' : 'Selected night'}</span></div><div class="report-cards">${weekly ? weeklyContent(summary) : dailyContent(record)}</div><p class="report-source">${hasDemo ? 'Fixed demo data · not measured sleep' : summary.count && weekly ? 'Goal counts require sensor data.' : 'Sleepet · your rest, at your pace.'}${persistenceFailed ? ' · Changes cannot be saved in this browser.' : ''}</p></div>${nav()}<div class="report-modal-layer" hidden></div><div class="report-announcement" role="status" aria-live="polite"></div>`;
+    screen.innerHTML = `<div class="report-scroll">${weekly ? '' : '<div class="report-toolbar"><button type="button" data-action="back" aria-label="Back to weekly report">‹ Week</button></div>'}<header class="report-header"><p>S L E E P E T</p><h1 tabindex="-1">${weekly ? 'Weekly' : 'Daily'} Report</h1></header><div class="report-companion"><p>${message}</p>${img('565bf.png', 'report-mascot')}</div><div class="report-period"><button type="button" data-action="previous" aria-label="Previous ${weekly ? 'week' : 'day'}">‹</button><button type="button" class="report-period-label" data-action="date" aria-label="Choose report date">${weekly ? rangeLabel(weekEnd) : dateLabel(selected)}</button><button type="button" data-action="next" aria-label="Next ${weekly ? 'week' : 'day'}" ${M.key(weekly ? weekEnd : selected) >= M.key(today()) ? 'disabled' : ''}>›</button></div><div class="report-meta"><span>${weekly ? note : dateLabel(selected)}</span><span>${weekly ? `${summary.count} nights` : hasDemo ? 'Demo night' : M.key(selected) === M.key(today()) ? 'Today' : 'Selected night'}</span></div><div class="report-cards">${weekly ? weeklyContent(summary) : dailyContent(record)}</div><p class="report-source">${hasDemo ? 'Fixed demo data · not measured sleep' : summary.count && weekly ? 'Goal counts require sensor data.' : 'Sleepet · your rest, at your pace.'}</p></div>${nav()}<div class="report-modal-layer" hidden></div><div class="report-announcement" role="status" aria-live="polite"></div>`;
     if (!weekly && returnScreen) {
       const back = screen.querySelector('[data-action="back"]');
       back.textContent = '‹ Back'; back.setAttribute('aria-label', 'Back to morning feedback');
@@ -85,7 +82,6 @@
       if (child.id !== 'onboardingLayer') child.inert = enabled;
     });
   };
-  function announce(message) { screen.querySelector('.report-announcement').textContent = message; }
   function closeModal() {
     const layer = screen.querySelector('.report-modal-layer');
     if (layer.hidden) return;
@@ -98,7 +94,7 @@
     returnFocus = trigger;
     const layer = screen.querySelector('.report-modal-layer');
     const date = mode === 'weekly' ? weekEnd : selected;
-    layer.innerHTML = `<button class="report-modal-scrim" type="button" data-action="close" aria-label="Close dialog" tabindex="-1"></button><section class="report-dialog" role="dialog" aria-modal="true" aria-labelledby="reportDialogTitle"><button type="button" class="report-dialog-close" data-action="close" aria-label="Close dialog">×</button>${kind === 'date' ? `<h2 id="reportDialogTitle">Choose ${mode === 'weekly' ? 'week ending' : 'a night'}</h2><form id="reportDateForm"><label for="reportDateInput">${mode === 'weekly' ? 'Show seven days ending on' : 'Show report for'}</label><input id="reportDateInput" type="date" value="${M.key(date)}" max="${M.key(today())}" required><button type="submit" class="report-dialog-primary">View report</button></form>` : `${img('5fb77.svg')}<h2 id="reportDialogTitle">More about your sleep</h2><p>Sleep stages and health insights need a compatible watch and a connected health service.</p><p>This browser prototype records session time only. Watch and Apple Health connections are not available here.</p><p>Use <strong>TEST +</strong> to explore seven labelled demo nights, matching the Unity prototype.</p><button type="button" class="report-dialog-primary" data-action="close">Got it</button>`}</section>`;
+    layer.innerHTML = `<button class="report-modal-scrim" type="button" data-action="close" aria-label="Close dialog" tabindex="-1"></button><section class="report-dialog" role="dialog" aria-modal="true" aria-labelledby="reportDialogTitle"><button type="button" class="report-dialog-close" data-action="close" aria-label="Close dialog">×</button>${kind === 'date' ? `<h2 id="reportDialogTitle">Choose ${mode === 'weekly' ? 'week ending' : 'a night'}</h2><form id="reportDateForm"><label for="reportDateInput">${mode === 'weekly' ? 'Show seven days ending on' : 'Show report for'}</label><input id="reportDateInput" type="date" value="${M.key(date)}" max="${M.key(today())}" required><button type="submit" class="report-dialog-primary">View report</button></form>` : `${img('5fb77.svg')}<h2 id="reportDialogTitle">More about your sleep</h2><p>Sleep stages and health insights need a compatible watch and a connected health service.</p><p>This browser prototype displays fixed example reports. Watch and Apple Health connections are not available here.</p><p>The displayed sleep values are fixed examples from the Figma design.</p><button type="button" class="report-dialog-primary" data-action="close">Got it</button>`}</section>`;
     layer.hidden = false;
     screen.querySelector('.report-scroll').inert = true;
     screen.querySelector('.report-nav').inert = true;
@@ -143,39 +139,21 @@
       }
       case 'date': case 'health': modal(button.dataset.action, button); break;
       case 'close': closeModal(); break;
-      case 'sample':
-        records = records.filter(r => !r.id.startsWith('fixed-week-')).concat(M.samples(mode === 'weekly' ? weekEnd : selected));
-        write(HISTORY, records); render();
-        screen.querySelector('[data-action="sample"]').focus({ preventScroll: true });
-        announce('Seven fixed demo nights added. Tap a day to view its report.');
-        break;
     }
   });
   document.querySelectorAll('.home-nav-button[aria-label="Sleep"], .bottom-nav button[aria-label="Sleep"]').forEach(button => {
-    button.addEventListener('click', () => { weekEnd = today(); open('weekly'); });
+    button.addEventListener('click', () => { weekEnd = referenceDate(); open('weekly'); });
   });
   document.getElementById('wakeSleepData')?.addEventListener('click', () => {
-    const latest = records.filter(r => !r.sample).sort((a, b) => Date.parse(b.startedAt) - Date.parse(a.startedAt))[0];
     returnScreen = 'wake-medium';
-    open('daily', latest ? M.key(new Date(latest.startedAt)) : M.key(today()));
+    open('daily', M.key(referenceDate()));
   });
-  // Record actual elapsed app activity, never infer sleep stages from the timer.
+  // Session activity cannot change the fixed report presentation.
   window.addEventListener('sleepet:screenchange', ({ detail }) => {
     backgroundInert(detail.name === 'reports');
-    if (detail.name === 'sleep-monitor' && detail.previousScreen !== 'sleep-monitor') {
-      if (!Number.isFinite(pending) || pending > Date.now() || Date.now() - pending > 86400000) pending = Date.now();
-      write(PENDING, pending);
-    }
-    if (detail.name === 'wake-medium' && detail.previousScreen === 'sleep-monitor' && Number.isFinite(pending)) {
-      const end = Date.now(), seconds = Math.max(0, Math.min(86400, (end - pending) / 1000));
-      const record = { id: `session-${pending}`, startedAt: new Date(pending).toISOString(), seconds, sample: false };
-      records = records.filter(r => r.id !== record.id).concat(record);
-      pending = null; write(PENDING, null); write(HISTORY, records);
-    }
   });
   const preview = new URLSearchParams(location.search);
   if (['weekly', 'daily', 'day-detail'].includes(preview.get('preview'))) {
-    if (preview.get('demo') === '1') records = records.filter(r => !r.sample).concat(M.samples(weekEnd));
     open(preview.get('preview') === 'weekly' ? 'weekly' : 'daily', M.key(selected));
   }
 })();

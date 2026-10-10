@@ -16,12 +16,12 @@ This is a front-end prototype only: account values and uploaded photos stay in t
 
 ## Sleep reports
 
-The moon icon on Home and Preferences opens the weekly report. Tap any day/column for its daily report, use the arrows to change the period, or select a date from the period pill. The back button returns to the same week. The wake-up screen's “Check last night’s sleep data” opens the latest recorded session and returns to morning feedback.
+The moon icon on Home and Preferences opens the weekly report. Tap any day/column for its daily report, use the arrows to change the displayed period, or select a date from the period pill. The daily back button returns to the same week. The wake-up screen's “Check last night’s sleep data” opens the fixed daily example and can return to morning feedback.
 
-Use **TEST +** to add the Unity prototype's seven fixed demo nights for the selected week. Demo records are labelled; a real session takes precedence on the same day. App sessions are saved locally under `sleepet-report-history-v1` when “Slide to end sleep” completes. App timing does not measure sleep stages; only the labelled demo records show stages. Watch/Apple Health integration is explanatory UI, not a live connection.
+Reports always display fixed Figma presentation data, independent of stored sessions, sleep timers, preferences, and the demo query parameter. Weekly values: 3/7 nights, 4/7 mornings, average bedtime 12:21 am, average sleep 7h 45m. The seven bar heights are fixed at 87/99/77/87/87/99/99 px; the average reference is fixed 47.5 px below the plot top. Daily values: 8h 10m, 11:50 pm–8:00 am, Deep 1h 50m, Light 4h 20m, REM 2h 00m. The initial date range is September 7–13, 2026; changing dates changes the labels, not the example values.
 
-Reports use the Figma weekly frame `53:378` and daily-without-watch frame `53:324`. Original Figma artwork is stored in `assets/reports/`. The CSS follows the Unity UI motion's 480 ms entrance with cubic-bezier(.22,.7,.22,1), staggered cards and growing chart columns, with a reduced-motion fallback.
+The top Home and TEST + buttons have been removed. The bottom navigation remains available. Existing browser history is not deleted or read by the fixed report view. Watch/Apple Health integration is explanatory UI, not a live connection.
 
-Direct previews: `index.html?preview=weekly`, `index.html?preview=daily`, and `index.html?preview=weekly&demo=1` (in-memory sample preview). A normal first visit has an empty report until a session or TEST + data is added. No package installation/build step is needed.
+Reports use Figma weekly frame 53:378 and daily-without-watch frame 53:324, with original artwork in assets/reports/. Motion follows the Unity 480 ms entrance, staggered cards and growing chart columns, with a reduced-motion fallback.
 
-Run calculation checks with `node --test report-model.test.cjs`. Browser checks cover weekly → daily → back, date selection, empty records, TEST +, persisted real sessions, Home/Me navigation, the health information dialog, and mobile scrolling.
+Open index.html?preview=weekly or index.html?preview=daily for direct previews. No build or package installation is required.
