@@ -80,6 +80,7 @@ const onboardingState = {
 const onboardingScreens = [...document.querySelectorAll(".onboarding-screen")];
 const onboardingLayer = $("onboardingLayer");
 let splashTimer = null;
+let preferencesEnterTimer = null;
 let timeClockDraft = state.timeClockEnabled;
 const stagedMorningScreens = new Set(["wake-medium", "morning-rating", "morning-drink", "morning-stretch", "morning-end"]);
 let stagedMorningTimer = null;
@@ -127,6 +128,24 @@ function showPreferences() {
   $("phone").scrollTop = 0;
   $("scrollArea").scrollTop = 0;
   renderMain();
+  playPreferencesEnter();
+}
+
+function playPreferencesEnter() {
+  const scrollArea = $("scrollArea");
+  const phone = $("phone");
+  window.clearTimeout(preferencesEnterTimer);
+  scrollArea.classList.remove("is-preferences-entering");
+  phone.classList.remove("is-preferences-entering");
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+  void scrollArea.offsetWidth;
+  scrollArea.classList.add("is-preferences-entering");
+  phone.classList.add("is-preferences-entering");
+  preferencesEnterTimer = window.setTimeout(() => {
+    scrollArea.classList.remove("is-preferences-entering");
+    phone.classList.remove("is-preferences-entering");
+    preferencesEnterTimer = null;
+  }, 640);
 }
 
 function showHome() {

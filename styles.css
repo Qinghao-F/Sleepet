@@ -56,6 +56,7 @@ button { border: 0; cursor: pointer; }
 .pill-button { min-width: 103px; }
 .preferences-section { margin-top: 10px; }
 .settings-card { border: 0; border-radius: 5px; padding: 10px 14px; }
+.preferences-section .settings-card { border-radius: 20px; }
 .setting-row { min-height: 30px; display: flex; align-items: center; gap: 7px; color: rgba(0,27,74,.8); }
 .setting-label { flex: 1; font: 500 15px/20px Arial, sans-serif; }
 .setting-value { flex: 1; min-width: 72px; text-align: center; font: 400 15px/20px Arial, sans-serif; }
@@ -74,6 +75,22 @@ button { border: 0; cursor: pointer; }
 .bottom-nav button { width: 112px; height: 58px; display: grid; place-items: center; border-radius: 13px; background: transparent; }
 .bottom-nav button.active { background: rgba(114,163,216,.35); }
 .bottom-nav img { width: 29px; height: 29px; }
+
+/* Preferences page entrance, aligned with the staggered Results cards. */
+.scroll-area.is-preferences-entering .profile-row,
+.scroll-area.is-preferences-entering .content-section,
+.phone.is-preferences-entering .bottom-nav {
+  animation: preferences-enter .42s cubic-bezier(.22,.7,.22,1) both;
+}
+.scroll-area.is-preferences-entering .plan-section { animation-delay: .06s; }
+.scroll-area.is-preferences-entering .sleepet-section { animation-delay: .12s; }
+.scroll-area.is-preferences-entering .preferences-section { animation-delay: .18s; }
+.scroll-area.is-preferences-entering .support-section { animation-delay: .24s; }
+.phone.is-preferences-entering .bottom-nav { animation-delay: .3s; }
+@keyframes preferences-enter {
+  from { opacity: 0; transform: translateY(14px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
 
 .sheet-layer { position: absolute; z-index: 20; inset: 0; visibility: hidden; pointer-events: none; }
 .sheet-layer.open { visibility: visible; pointer-events: auto; }
@@ -222,6 +239,9 @@ button { border: 0; cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
   .onboarding-screen, .onboard-primary, .onboard-secondary { transition: none !important; }
   .home-message, .home-message-text { transition: none; }
+  .scroll-area.is-preferences-entering .profile-row,
+  .scroll-area.is-preferences-entering .content-section,
+  .phone.is-preferences-entering .bottom-nav { animation: none !important; }
 }
 
 @media (max-width: 460px) {
