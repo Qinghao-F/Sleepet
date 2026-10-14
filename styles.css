@@ -14,22 +14,17 @@ button, input { font: inherit; }
 button { border: 0; cursor: pointer; }
 
 .demo-shell { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 16px 24px; overflow: auto; }
-.demo-label { margin: 0; color: #bbdff6; font: 600 12px/1.2 Arial, sans-serif; letter-spacing: .08em; text-transform: uppercase; }
-.phone { position: relative; width: 402px; height: 874px; overflow: hidden; border-radius: 28px; outline: 1px solid rgba(195,225,244,.3); outline-offset: -1px; background: linear-gradient(180deg, rgb(0, 27, 74) 0%, rgb(134, 196, 228) 27%, rgb(67, 132, 193) 65.428%, rgb(0, 26, 75) 100%); box-shadow: 0 24px 70px rgba(0,0,0,.45); }
-
-.status-bar { position: absolute; inset: 0 0 auto; z-index: 5; height: 62px; display: flex; align-items: center; justify-content: space-between; padding: 0 22px 0 56px; font: 600 17px/1 Arial, sans-serif; }
-.status-icons { display: flex; align-items: center; gap: 6px; }
-.signal { width: 19px; height: 13px; border-radius: 2px; background: linear-gradient(90deg, #fff 18%, transparent 18% 28%, #fff 28% 48%, transparent 48% 58%, #fff 58% 78%, transparent 78% 88%, #fff 88%); }
-.wifi { transform: rotate(-12deg); font-size: 23px; line-height: .5; }
-.battery { width: 23px; height: 12px; border: 1.7px solid #fff; border-radius: 3px; position: relative; }
-.battery::after { content: ""; position: absolute; right: -4px; top: 3px; width: 2px; height: 5px; border-radius: 0 2px 2px 0; background: #fff; }
+.device-frame { position: relative; flex: 0 0 auto; width: 450px; height: 920px; filter: drop-shadow(0 24px 38px rgba(0,0,0,.42)); }
+.phone { position: absolute; z-index: 1; left: 24px; top: 23px; width: 402px; height: 874px; overflow: hidden; border-radius: 48px; background: linear-gradient(180deg, rgb(0, 27, 74) 0%, rgb(134, 196, 228) 27%, rgb(67, 132, 193) 65.428%, rgb(0, 26, 75) 100%); }
+.device-status-bar { position: absolute; z-index: 80; left: 24px; top: 23px; width: 402px; height: 62px; object-fit: contain; pointer-events: none; }
+.device-bezel { position: absolute; z-index: 90; inset: 0; width: 450px; height: 920px; object-fit: contain; pointer-events: none; user-select: none; -webkit-user-drag: none; }
 
 .scroll-area { position: absolute; top: 62px; left: 22px; width: 358px; height: 746px; overflow: auto; padding: 0 1px 22px; scrollbar-width: none; }
 .scroll-area::-webkit-scrollbar { display: none; }
 .profile-row { display: flex; gap: 10px; height: 74px; align-items: center; }
-.avatar { flex: 0 0 auto; width: 70px; height: 70px; border-radius: 50%; overflow: hidden; background-color: #c2e1f9; background-repeat: no-repeat; }
-.avatar-sally { background-image: url("./assets/mocha.png"); background-size: 300% 200%; background-position: 50% 1%; }
-.avatar-mocha { background-image: url("./assets/mocha.png"); background-size: 300% 200%; background-position: 50% 1%; }
+.avatar { flex: 0 0 auto; width: 70px; height: 70px; border-radius: 50%; overflow: hidden; background-color: #c2e1f9; background-repeat: no-repeat; background-position: center; background-size: cover; }
+.avatar-sally { background-image: url("./assets/profile/avatar-owner-girl.png"); }
+.avatar-mocha { background-image: url("./assets/profile/dog.png"); }
 .profile-copy { height: 74px; display: flex; flex: 1; flex-direction: column; justify-content: center; gap: 7px; }
 .profile-copy strong { font-size: 20px; font-weight: 500; }
 .profile-copy span { font-size: 15px; }
@@ -120,9 +115,10 @@ button { border: 0; cursor: pointer; }
 .pet-image-row { height: 111px; }
 .pet-image-row strong { flex: 0 0 119px; }
 .tiny-arrow { flex: 0 0 22px; padding: 0; color: var(--text); background: transparent; font-size: 20px; }
+.tiny-arrow:disabled { opacity: .22; cursor: default; }
 .pet-image-row img { width: 112px; height: 103px; object-fit: contain; }
 .pose-row { height: 108px; }
-.pose-preview { width: 153px; height: 98px; background-image: url("./assets/mocha.png"); background-repeat: no-repeat; background-size: 300% 200%; background-position: 100% 0; }
+.pet-image-row .pose-preview { width: 153px; height: 98px; object-fit: contain; }
 .pet-actions { justify-content: space-between; gap: 0; padding: 10px 19px 0; }
 .pet-actions .sheet-pill { width: 121px; }
 .pet-actions .sheet-pill:disabled { opacity: 1; cursor: default; }
@@ -203,12 +199,6 @@ button { border: 0; cursor: pointer; }
 .meet-change { margin-top: 37px; color: #1d4975; background: transparent; font: 400 24px/30px Roboto, Arial, sans-serif; cursor: pointer; }
 
 .home-screen { overflow: hidden; color: #fff; background: #0a2f61 url("./assets/onboarding/raw/home-raw-01.png") center top / cover no-repeat; }
-.home-status-bar { position: absolute; inset: 20px 24px auto; display: flex; align-items: center; justify-content: space-between; color: #fff; font: 500 17px/22px Roboto, Arial, sans-serif; }
-.home-status-icons { display: flex; align-items: center; gap: 7px; }
-.home-signal { width: 18px; height: 12px; background: linear-gradient(90deg,#fff 18%,transparent 18% 28%,#fff 28% 48%,transparent 48% 58%,#fff 58% 78%,transparent 78% 88%,#fff 88%); border-radius: 2px; }
-.home-wifi { width: 16px; height: 11px; border: 2px solid #fff; border-top-color: transparent; border-left-color: transparent; border-radius: 0 0 14px 0; transform: rotate(45deg); }
-.home-battery { width: 24px; height: 12px; border: 1.5px solid #fff; border-radius: 3px; position: relative; }
-.home-battery::after { content: ""; position: absolute; right: -4px; top: 3px; width: 2px; height: 5px; border-radius: 0 2px 2px 0; background: #fff; }
 .home-greeting { position: absolute; left: 28px; top: 78px; margin: 0; color: #fff; font: 400 19px/24px Roboto, Arial, sans-serif; }
 .routine-pill { position: absolute; left: 21px; top: 111px; width: 318px; height: 45px; display: flex; align-items: center; gap: 10px; padding: 0 10px 0 4px; border-radius: 24px; color: #fff; background: linear-gradient(100deg, rgba(8,33,77,.85) 0%, rgba(11,36,78,.9) 56%, rgba(19,47,89,.84) 100%); font: 400 15px/20px Roboto, Arial, sans-serif; text-align: left; }
 .routine-icon { width: 36px; height: 36px; border-radius: 50%; }
@@ -236,8 +226,10 @@ button { border: 0; cursor: pointer; }
 
 @media (max-width: 460px) {
   .demo-shell { padding: 0; display: block; }
-  .demo-label { display: none; }
-  .phone { width: 100vw; height: 100vh; max-height: 874px; border-radius: 0; }
+  .device-frame { width: 100vw; height: 100vh; filter: none; }
+  .phone { left: 0; top: 0; width: 100vw; height: 100vh; max-height: 874px; border-radius: 0; }
+  .device-status-bar { left: 0; top: 0; width: 100vw; height: auto; }
+  .device-bezel { display: none; }
 }
 
 /* Updated Figma onboarding pass (264:808 → 264:471) */

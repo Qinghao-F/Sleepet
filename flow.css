@@ -1,8 +1,6 @@
 /* Sleep monitor and medium-night wake-up flow */
 .sleep-monitor-screen, .wake-medium-screen { display: block; overflow: hidden; font-family: "PingFang SC", Roboto, Arial, sans-serif; }
 .sleep-monitor-screen { color: #fff; background: linear-gradient(180deg, #001b4a 0%, #86c4e4 27%, #4384c1 65.428%, #001a4b 100%); }
-.flow-status-bar { position: absolute; z-index: 2; left: 56px; right: 37px; top: 20px; height: 22px; display: flex; align-items: center; justify-content: space-between; color: #fff; font: 600 17px/22px Roboto, Arial, sans-serif; }
-.flow-status-bar .home-status-icons { gap: 5px; }
 .sleep-monitor-time { position: absolute; left: 86px; top: 77px; display: flex; align-items: baseline; gap: 10px; color: #fff; font-size: 90px; font-weight: 400; line-height: 126px; letter-spacing: -2px; white-space: nowrap; }
 .sleep-monitor-period { font-size: 40px; line-height: 56px; letter-spacing: 0; }
 .sleep-mode-wrap { position: absolute; z-index: 4; left: 118px; top: 200px; width: 165px; }

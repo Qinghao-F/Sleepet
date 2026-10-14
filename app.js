@@ -12,9 +12,52 @@ const state = {
 
 const sounds = ["Ocean", "Rain", "Forest"];
 const modes = ["Quiet", "Focus", "Deep"];
-const petNames = ["Mocha", "Luna", "Hazel"];
-const appearanceImages = ["./assets/pet-option-3.png", "./assets/pet-option-1.png", "./assets/pet-option-2.png"];
-const posePositions = ["100% 0", "0% 0", "50% 0", "0% 100%", "100% 100%"];
+const pets = [
+  {
+    name: "Mocha",
+    species: "dog",
+    avatar: "./assets/profile/dog.png",
+    appearances: [
+      "./assets/pets/dog-poses/sitting.png",
+      "./assets/pets/dog-appearance-chocolate.png",
+      "./assets/pets/dog-appearance-golden.png"
+    ],
+    poses: [
+      "./assets/pets/dog-poses/sitting.png",
+      "./assets/pets/dog-poses/sleeping.png",
+      "./assets/pets/dog-poses/on-back.png",
+      "./assets/pets/dog-poses/flower.png",
+      "./assets/pets/dog-poses/playful.png"
+    ]
+  },
+  {
+    name: "Luna",
+    species: "cat",
+    avatar: "./assets/profile/avatar-cat.png",
+    appearances: ["./assets/pets/cat-appearance.png"],
+    poses: [
+      "./assets/pets/cat-poses/sitting.png",
+      "./assets/pets/cat-poses/sleeping.png",
+      "./assets/pets/cat-poses/on-back.png",
+      "./assets/pets/cat-poses/flower.png",
+      "./assets/pets/cat-poses/playful.png"
+    ]
+  },
+  {
+    name: "Hazel",
+    species: "hamster",
+    avatar: "./assets/profile/avatar-hamster.png",
+    appearances: ["./assets/pets/hamster-appearance.png"],
+    poses: [
+      "./assets/pets/hamster-poses/sitting.png",
+      "./assets/pets/hamster-poses/sleeping.png",
+      "./assets/pets/hamster-poses/on-back.png",
+      "./assets/pets/hamster-poses/flower.png",
+      "./assets/pets/hamster-poses/playful.png"
+    ]
+  }
+];
+const poseNames = ["sitting", "sleeping", "resting on its back", "holding a flower", "playing"];
 const CLOCK_CENTER = 144;
 const CLOCK_RADIUS = 128;
 const CLOCK_STEP = 0.5;
@@ -358,6 +401,7 @@ function renderMain() {
   $("volumeValue").textContent = `${state.volume}%`;
   $("volumeSlider").value = state.volume;
   $("mainPetName").textContent = state.petName;
+  $("mainPetAvatar").style.backgroundImage = `url("${pets[state.petIndex].avatar}")`;
   $("bedtimeSummary").textContent = `${Number(state.schedule.bedHour)}:${state.schedule.bedMinute}${state.schedule.bedPeriod}`;
   $("wakeSummary").textContent = `${Number(state.schedule.wakeHour)}:${state.schedule.wakeMinute}${state.schedule.wakePeriod}`;
   $("winddownSummary").textContent = `${Number(state.schedule.windMinutes)}MIN`;
@@ -365,10 +409,18 @@ function renderMain() {
 }
 
 function renderPetDraft() {
+  const pet = pets[state.petIndex];
+  state.appearanceIndex = Math.min(state.appearanceIndex, pet.appearances.length - 1);
+  state.poseIndex = Math.min(state.poseIndex, pet.poses.length - 1);
   document.querySelectorAll(".pet-thumb").forEach((button) => button.classList.toggle("selected", Number(button.dataset.petIndex) === state.petIndex));
-  $("petNameChoice").innerHTML = `${petNames[state.petIndex]} <span>›</span>`;
-  $("appearanceImage").src = appearanceImages[state.appearanceIndex];
-  $("posePreview").style.backgroundPosition = posePositions[state.poseIndex];
+  $("petNameChoice").innerHTML = `${pet.name} <span>›</span>`;
+  $("appearanceImage").src = pet.appearances[state.appearanceIndex];
+  $("appearanceImage").alt = `${pet.name} ${pet.species} appearance ${state.appearanceIndex + 1}`;
+  $("posePreview").src = pet.poses[state.poseIndex];
+  $("posePreview").alt = `${pet.name} ${poseNames[state.poseIndex]}`;
+  const hasAppearanceChoices = pet.appearances.length > 1;
+  $("appearancePrev").disabled = !hasAppearanceChoices;
+  $("appearanceNext").disabled = !hasAppearanceChoices;
 }
 
 function readScheduleDraft() {
@@ -441,14 +493,22 @@ document.querySelectorAll(".clock-handle").forEach((handle) => {
   handle.addEventListener("pointercancel", finishDialDrag);
 });
 
-document.querySelectorAll("[data-pet-index]").forEach((button) => button.addEventListener("click", () => { state.petIndex = Number(button.dataset.petIndex); state.petName = petNames[state.petIndex]; renderPetDraft(); }));
-$("petNameChoice").addEventListener("click", () => { state.petIndex = cycle(state.petIndex, petNames.length, 1); state.petName = petNames[state.petIndex]; renderPetDraft(); });
-$("appearancePrev").addEventListener("click", () => { state.appearanceIndex = cycle(state.appearanceIndex, appearanceImages.length, -1); renderPetDraft(); });
-$("appearanceNext").addEventListener("click", () => { state.appearanceIndex = cycle(state.appearanceIndex, appearanceImages.length, 1); renderPetDraft(); });
-$("posePrev").addEventListener("click", () => { state.poseIndex = cycle(state.poseIndex, posePositions.length, -1); renderPetDraft(); });
-$("poseNext").addEventListener("click", () => { state.poseIndex = cycle(state.poseIndex, posePositions.length, 1); renderPetDraft(); });
+function selectPet(index) {
+  state.petIndex = index;
+  state.petName = pets[index].name;
+  state.appearanceIndex = 0;
+  state.poseIndex = 0;
+  renderPetDraft();
+}
+
+document.querySelectorAll("[data-pet-index]").forEach((button) => button.addEventListener("click", () => selectPet(Number(button.dataset.petIndex))));
+$("petNameChoice").addEventListener("click", () => selectPet(cycle(state.petIndex, pets.length, 1)));
+$("appearancePrev").addEventListener("click", () => { state.appearanceIndex = cycle(state.appearanceIndex, pets[state.petIndex].appearances.length, -1); renderPetDraft(); });
+$("appearanceNext").addEventListener("click", () => { state.appearanceIndex = cycle(state.appearanceIndex, pets[state.petIndex].appearances.length, 1); renderPetDraft(); });
+$("posePrev").addEventListener("click", () => { state.poseIndex = cycle(state.poseIndex, pets[state.petIndex].poses.length, -1); renderPetDraft(); });
+$("poseNext").addEventListener("click", () => { state.poseIndex = cycle(state.poseIndex, pets[state.petIndex].poses.length, 1); renderPetDraft(); });
 $("petLayer").querySelector(".scrim").addEventListener("click", () => closeLayer($("petLayer")));
-$("savePet").addEventListener("click", () => { $("mainPetAvatar").style.backgroundPosition = posePositions[state.poseIndex]; renderMain(); closeLayer($("petLayer")); });
+$("savePet").addEventListener("click", () => { renderMain(); closeLayer($("petLayer")); });
 
 document.querySelector('.bottom-nav button[aria-label="Home"]').addEventListener("click", showHome);
 document.querySelector('.bottom-nav button[aria-label="Me"]').addEventListener("click", showPreferences);

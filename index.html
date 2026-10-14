@@ -13,8 +13,8 @@
   </head>
   <body>
     <main class="demo-shell">
-      <p class="demo-label">Sleepet · Interactive demo</p>
-      <div class="phone" id="phone" aria-label="Sleepet preferences page">
+      <div class="device-frame">
+        <div class="phone" id="phone" aria-label="Sleepet preferences page">
         <section class="onboarding-layer" id="onboardingLayer" aria-label="Sleepet onboarding">
           <section class="onboarding-screen report-screen" data-screen="reports" aria-label="Sleep reports" hidden></section>
           <section class="onboarding-screen splash-screen is-active" data-screen="splash" aria-label="Sleepet welcome animation">
@@ -106,7 +106,6 @@
 
           <section class="onboarding-screen home-screen" data-screen="home" aria-labelledby="homeGreeting" hidden>
             <img class="home-landscape" src="./assets/onboarding/raw/home-raw-01.png" alt="" aria-hidden="true" draggable="false" />
-            <div class="home-status-bar"><span>9:41</span><span class="home-status-icons"><span class="home-signal"></span><span class="home-wifi"></span><span class="home-battery"></span></span></div>
             <p class="home-greeting" id="homeGreeting">Good evening, Sally.</p>
             <button class="routine-pill" id="routineButton" type="button"><img class="routine-icon" src="./assets/onboarding/raw/home-raw-04.png" alt="" /><span>Tomorrow’s morning routine</span><span class="routine-arrows" aria-hidden="true"><img src="./assets/onboarding/raw/home-raw-10.png" alt="" /></span></button>
             <div class="home-message" id="homeMessage" aria-live="polite" aria-atomic="true"><span class="home-message-text" id="homeMessageText">Take it slow tonight,<br />I&#8217;m here..</span></div>
@@ -123,7 +122,6 @@
           </section>
 
           <section class="onboarding-screen sleep-monitor-screen" data-screen="sleep-monitor" aria-labelledby="sleepMonitorTime" hidden>
-            <div class="flow-status-bar" aria-hidden="true"><span>9:41</span><span class="home-status-icons"><span class="home-signal"></span><span class="home-wifi"></span><span class="home-battery"></span></span></div>
             <div class="sleep-monitor-time" id="sleepMonitorTime"><span>9:41</span><span class="sleep-monitor-period">PM</span></div>
             <div class="sleep-mode-wrap">
               <button class="sleep-mode-toggle" id="sleepModeToggle" type="button" aria-expanded="false" aria-controls="sleepModeMenu"><span id="sleepModeLabel">Play all night</span><img src="./assets/flow/sleep-mode-arrow.svg" alt="" /></button>
@@ -232,7 +230,6 @@
           </section>
 
           <section class="onboarding-screen morning-setting-screen" data-screen="morning-setting" aria-labelledby="morningSettingTitle" hidden>
-            <div class="flow-status-bar" aria-hidden="true"><span>9:41</span><span class="home-status-icons"><span class="home-signal"></span><span class="home-wifi"></span><span class="home-battery"></span></span></div>
             <button class="morning-setting-back" id="morningSettingBack" type="button" aria-label="Back to Home">‹</button>
             <h1 id="morningSettingTitle">Tomorrow’s Todo...</h1>
             <p class="morning-setting-subtitle">Keep it light. You can change anything.</p>
@@ -266,11 +263,6 @@
           </section>
           <span class="morning-circle-transition" id="morningCircleTransition" aria-hidden="true"></span>
         </section>
-
-        <header class="status-bar" aria-label="Status bar">
-          <span>9:41</span>
-          <span class="status-icons"><span class="signal"></span><span class="wifi">⌁</span><span class="battery"></span></span>
-        </header>
 
         <section class="scroll-area" id="scrollArea">
           <div class="profile-row">
@@ -405,21 +397,24 @@
           <section class="bottom-sheet pet-sheet" role="dialog" aria-modal="true" aria-labelledby="petTitle">
             <h3 id="petTitle">My Sleepet</h3>
             <div class="pet-selector">
-              <button class="pet-thumb selected" type="button" data-pet-index="0"><span class="avatar avatar-mocha"></span></button>
-              <button class="pet-thumb" type="button" data-pet-index="1"><img src="./assets/pet-option-1.png" alt="Cat pet" /></button>
-              <button class="pet-thumb" type="button" data-pet-index="2"><img src="./assets/pet-option-2.png" alt="Hamster pet" /></button>
+              <button class="pet-thumb selected" type="button" data-pet-index="0" aria-label="Choose Mocha the dog"><img src="./assets/profile/dog.png" alt="" /></button>
+              <button class="pet-thumb" type="button" data-pet-index="1" aria-label="Choose Luna the cat"><img src="./assets/profile/avatar-cat.png" alt="" /></button>
+              <button class="pet-thumb" type="button" data-pet-index="2" aria-label="Choose Hazel the hamster"><img src="./assets/profile/avatar-hamster.png" alt="" /></button>
               <button class="pet-thumb add-pet" type="button" aria-label="Add pet">＋</button>
             </div>
             <div class="pet-details">
               <div class="pet-detail-row"><strong>Name</strong><button class="pet-choice" id="petNameChoice" type="button">Mocha <span>›</span></button></div>
               <div class="divider"></div>
-              <div class="pet-detail-row pet-image-row"><strong>Appearance</strong><button class="tiny-arrow" id="appearancePrev" type="button">‹</button><img id="appearanceImage" src="./assets/pet-option-3.png" alt="Pet appearance" /><button class="tiny-arrow" id="appearanceNext" type="button">›</button></div>
+              <div class="pet-detail-row pet-image-row"><strong>Appearance</strong><button class="tiny-arrow" id="appearancePrev" type="button" aria-label="Previous appearance">‹</button><img id="appearanceImage" src="./assets/pets/dog-poses/sitting.png" alt="Mocha dog appearance 1" /><button class="tiny-arrow" id="appearanceNext" type="button" aria-label="Next appearance">›</button></div>
               <div class="divider"></div>
-              <div class="pet-detail-row pet-image-row pose-row"><strong>Movements/<br />Poses</strong><button class="tiny-arrow" id="posePrev" type="button">‹</button><div class="pose-preview" id="posePreview" aria-label="Current pet pose"></div><button class="tiny-arrow" id="poseNext" type="button">›</button></div>
+              <div class="pet-detail-row pet-image-row pose-row"><strong>Movements/<br />Poses</strong><button class="tiny-arrow" id="posePrev" type="button" aria-label="Previous pose">‹</button><img class="pose-preview" id="posePreview" src="./assets/pets/dog-poses/sitting.png" alt="Mocha sitting" /><button class="tiny-arrow" id="poseNext" type="button" aria-label="Next pose">›</button></div>
             </div>
             <div class="sheet-actions pet-actions"><button class="sheet-pill" type="button" disabled>Preview</button><button class="sheet-pill" id="savePet" type="button">Save</button></div>
           </section>
         </div>
+        </div>
+        <img class="device-status-bar" src="./assets/device/iphone-17-pro-status-bar.png" alt="" aria-hidden="true" />
+        <img class="device-bezel" src="./assets/device/iphone-17-pro-bezel.png" alt="" aria-hidden="true" />
       </div>
     </main>
     <script src="./app.js?v=morning-flow-stagger-reports-1"></script>
